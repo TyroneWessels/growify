@@ -181,14 +181,15 @@ Deno.serve(async (request: Request) => {
           }
           continue;
         }
-        console.error("Push reminder failed:", getErrorMessage(error));
+        console.error(`Push reminder failed with HTTP ${statusCode || "unknown"}:`, getErrorMessage(error));
         result.failed += 1;
       }
     }
 
     return jsonResponse(result.failed ? 500 : 200, result);
   } catch (error) {
-    console.error("Push reminder job failed:", getErrorMessage(error));
+    const statusCode = getPushStatusCode(error);
+    console.error(`Push reminder job failed with HTTP ${statusCode || "unknown"}:`, getErrorMessage(error));
     return jsonResponse(500, { error: "Push reminder job failed." });
   }
 });
