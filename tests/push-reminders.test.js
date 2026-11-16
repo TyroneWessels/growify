@@ -57,15 +57,15 @@ test("push payload summarizes plant tasks and opens the care calendar", () => {
   assert.equal(payload.tag, "growify-care-2026-11-16");
   assert.equal(payload.url, "kalender/");
   assert.equal(reminderLogic.buildReminderPayload([], "2026-11-16"), null);
-});
-
-test("test push payload is distinct from daily reminders and admin access is exact", () => {
-  assert.deepEqual(reminderLogic.buildTestReminderPayload(), {
-    title: "Growify · testmelding",
-    body: "De pushmeldingen werken op dit apparaat.",
-    tag: "growify-push-test",
+  assert.deepEqual(reminderLogic.buildReminderPayload([], "2026-11-16", true), {
+    title: "Growify · tijd voor je planten",
+    body: "Bekijk welke planten vandaag verzorging nodig hebben.",
+    tag: "growify-care-2026-11-16",
     url: "kalender/"
   });
+});
+
+test("admin access is restricted to the configured account", () => {
   assert.equal(reminderLogic.isPushTestAdmin("admin-user-id", "admin-user-id"), true);
   assert.equal(reminderLogic.isPushTestAdmin("other-user-id", "admin-user-id"), false);
   assert.equal(reminderLogic.isPushTestAdmin("", "admin-user-id"), false);

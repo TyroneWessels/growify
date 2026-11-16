@@ -110,8 +110,16 @@ export function getDueWateringTasks(state, today) {
   return tasks;
 }
 
-export function buildReminderPayload(tasks, date) {
-  if (!tasks.length) return null;
+export function buildReminderPayload(tasks, date, includeGenericWhenEmpty = false) {
+  if (!tasks.length) {
+    if (!includeGenericWhenEmpty) return null;
+    return {
+      title: "Growify · tijd voor je planten",
+      body: "Bekijk welke planten vandaag verzorging nodig hebben.",
+      tag: `growify-care-${date}`,
+      url: "kalender/"
+    };
+  }
   const plants = [...new Set(tasks.map((task) => task.plantName))];
   const names = plants.slice(0, 3).join(", ");
   const remaining = plants.length - 3;
@@ -123,15 +131,6 @@ export function buildReminderPayload(tasks, date) {
     title: "Growify · tijd voor je planten",
     body,
     tag: `growify-care-${date}`,
-    url: "kalender/"
-  };
-}
-
-export function buildTestReminderPayload() {
-  return {
-    title: "Growify · testmelding",
-    body: "De pushmeldingen werken op dit apparaat.",
-    tag: "growify-push-test",
     url: "kalender/"
   };
 }

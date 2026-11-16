@@ -49,7 +49,7 @@ De project-ID is het deel vóór `.supabase.co` in de URL van het project. De fu
 
 ### Alleen voor jouw account: testpaneel
 
-Kopieer in **Supabase → Authentication → Users** de User UID van jouw eigen account. Voeg bij **Edge Functions → Secrets** ook `PUSH_TEST_ADMIN_USER_ID` toe met die UID en deploy `send-reminders` opnieuw. De homepage toont daarna na het inloggen bij jouw account een testpaneel. De server controleert de UID bij ieder verzoek; andere accounts kunnen het paneel en de testfunctie niet gebruiken. De test stuurt alleen naar het apparaat waarop je bent ingelogd en heeft geen invloed op de dagelijkse herinnering.
+Kopieer in **Supabase → Authentication → Users** de User UID van jouw eigen account. Voeg bij **Edge Functions → Secrets** ook `PUSH_TEST_ADMIN_USER_ID` toe met die UID en deploy `send-reminders` opnieuw. De homepage toont daarna na het inloggen bij jouw account een beheeronderdeel. De server controleert de UID bij ieder verzoek; andere accounts kunnen het onderdeel en de handmatige verzending niet gebruiken. **Stuur herinnering nu** gebruikt dezelfde berekening en melding als de normale dagelijkse herinnering, maar slaat de tijdscontrole en de beperking tot één dagelijkse verzending over. Als er geen taken aan de beurt zijn, stuurt de knop een algemene Growify-herinnering. De verzending gaat alleen naar het apparaat waarop je bent ingelogd en wijzigt de dagelijkse verzendstatus niet.
 
 ## 5. Voeg GitHub Actions-waarden toe
 

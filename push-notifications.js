@@ -83,21 +83,21 @@
     const subscription = await getActiveSubscription();
     testButton.disabled = !subscription;
     testStatus.textContent = subscription
-      ? "Testmelding gaat alleen naar dit apparaat en verandert het dagelijkse schema niet."
-      : "Zet eerst de dagelijkse melding aan op dit apparaat om een test te sturen.";
+      ? "Stuurt de gewone herinnering direct naar dit apparaat, zonder op de ingestelde tijd te wachten."
+      : "Zet eerst de dagelijkse melding aan op dit apparaat om een herinnering te sturen.";
   }
 
   testButton?.addEventListener("click", async () => {
     testButton.disabled = true;
-    testStatus.textContent = "Testmelding wordt verstuurd…";
+    testStatus.textContent = "Herinnering wordt verstuurd…";
     try {
       const subscription = await getActiveSubscription();
       if (!subscription) throw new Error("Er is geen pushabonnement op dit apparaat. Zet eerst de dagelijkse melding aan.");
       await window.SproutlyAccount.sendPushTestNotification(subscription.endpoint);
-      testStatus.textContent = "Testmelding verstuurd. Controleer de meldingen op dit apparaat.";
+      testStatus.textContent = "Herinnering verstuurd. Controleer de meldingen op dit apparaat.";
     } catch (error) {
-      console.error("Testmelding versturen is mislukt:", error);
-      testStatus.textContent = error.message || "De testmelding kon niet worden verstuurd.";
+      console.error("Handmatige pushherinnering versturen is mislukt:", error);
+      testStatus.textContent = error.message || "De herinnering kon niet worden verstuurd.";
     } finally {
       testButton.disabled = false;
     }

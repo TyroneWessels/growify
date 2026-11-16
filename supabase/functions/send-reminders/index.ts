@@ -113,18 +113,27 @@ Deno.serve(async (request: Request) => {
 
       const { data: subscription, error: subscriptionError } = await client
         .from("sproutly_push_subscriptions")
-        .select("endpoint,p256dh,auth")
+        .select("endpoint,p256dh,auth,time_zone")
         .eq("user_id", authData.user.id)
         .eq("endpoint", body.endpoint)
         .maybeSingle();
       if (subscriptionError) throw subscriptionError;
       if (!subscription) return jsonResponse(404, { error: "No push subscription was found for this device." });
 
+      const { data: userState, error: stateError } = await client
+        .from("sproutly_user_data")
+        .select("state")
+        .eq("user_id", authData.user.id)
+        .maybeSingle();
+      if (stateError) throw stateError;
+      const local = getLocalDateTime(new Date(), subscription.time_zone || defaultTimeZone);
+      const tasks = getDueWateringTasks(userState?.state, local.date);
+      const payload = buildReminderPayload(tasks, local.date, true);
       await webPush.sendNotification({
         endpoint: subscription.endpoint,
         keys: { p256dh: subscription.p256dh, auth: subscription.auth }
-      }, JSON.stringify(buildTestReminderPayload()));
-      return jsonResponse(200, { sent: true });
+      }, JSON.stringify(payload));
+      return jsonResponse(200, { sent: true, taskCount: tasks.length });
     }
 
     const subscriptions = await fetchAllSubscriptions(client);
