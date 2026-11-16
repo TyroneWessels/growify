@@ -559,6 +559,16 @@ h1 em, h2 em, h2 span { color: #a44f35; }
 .plant-status { border-left: 4px solid var(--green); border-radius: 4px 12px 12px 4px; }
 .newsletter-card { border: 1px solid #e8c9b3; border-radius: 24px 24px 24px 7px; background: url("assets/botanical-sprig.svg") no-repeat right 12px bottom 0 / 105px auto, linear-gradient(120deg, #f4ddcb, #f8ebd8); box-shadow: 0 8px 24px rgba(100, 72, 49, .07); }
 .newsletter-card > p { max-width: 270px; color: #634c43; font-size: 15px; }
+.push-reminder-settings { grid-column: 1 / -1; display: flex; flex-wrap: wrap; align-items: center; gap: 12px; padding-top: 18px; border-top: 1px solid rgba(113, 77, 66, .2); }
+.push-reminder-settings label { color: #634c43; font-size: 13px; font-weight: 700; }
+.push-reminder-settings input { min-height: 40px; padding: 7px 10px; border: 1px solid #9a6f60; border-radius: 6px; background: rgba(255, 255, 255, .6); color: #433c34; font: inherit; }
+.push-reminder-settings .reminder-status { flex-basis: 100%; margin: 0; }
+.push-reminder-settings [hidden] { display: none; }
+.push-test-admin { grid-column: 1 / -1; padding: 18px; border: 1px solid rgba(113, 77, 66, .25); border-radius: 12px; background: rgba(255, 255, 255, .45); }
+.push-test-admin h3 { margin: 0 0 8px; color: #634c43; }
+.push-test-admin p { margin: 0 0 12px; color: #557269; line-height: 1.5; }
+.push-test-admin .reminder-status { margin-top: 10px; }
+.push-test-admin[hidden] { display: none; }
 .site-footer { gap: 15px; padding-top: 30px; font-size: 14px; }
 .privacy-notice { background: linear-gradient(135deg, #fffdf8, #f1f7e9); }
 .privacy-notice p { font-size: 15px; }
@@ -647,6 +657,61 @@ h1, h2, h3, .collection-item, .calendar-event, .care-task { overflow-wrap: anywh
 }
 @media (prefers-reduced-motion: reduce) {
   html { scroll-behavior: auto; }
-  .plant-card, .plant-photo { transition: none; }
+  *, *::before, *::after {
+    animation-duration: .01ms !important;
+    animation-iteration-count: 1 !important;
+    scroll-behavior: auto !important;
+    transition-duration: .01ms !important;
+  }
   .plant-card:hover, .plant-card:hover .plant-photo { transform: none; }
+}
+
+body { font-size: 17px; line-height: 1.6; }
+.main-nav, .profile-name, .text-button, .eyebrow, .quick-searches,
+.quick-searches button, .task-card h3, .task-card p,
+.location-card-copy strong, .location-card-copy small, .filter-tab,
+.filter-select select, .plant-card h3, .plant-card .scientific-name,
+.plant-tag, .save-plant, .calendar-event, .calendar-event small,
+.catalog-result-count, .catalog-card .plant-care-details,
+.catalog-card-meta, .calendar-summary, .calendar-guidance,
+.reminder-status, .site-footer, .newsletter-card > p, .auth-intro,
+.auth-content label, .auth-content input, .auth-status, .auth-tab,
+.modal-content > p:not(.eyebrow):not(.scientific-name), .care-fact,
+.info-item small, .info-item strong, .modal-routine span:last-child,
+.modal-routine small, .plant-profile-form label,
+.plant-profile-form input, .plant-profile-form textarea, .toast,
+.api-status, .image-credit, .modal-source {
+  font-size: max(1rem, 1em);
+}
+:where(a, button, input, select, textarea, summary):focus-visible {
+  outline: 3px solid var(--ink);
+  outline-offset: 3px;
+}
+.main-nav a { display: inline-flex; min-height: 44px; align-items: center; }
+.icon-button, .more-button, .modal-close, .profile-button {
+  min-width: 44px;
+  min-height: 44px;
+}
+.catalog-card .save-plant { min-height: 44px; }
+.modal-close { display: grid; place-items: center; }
+.text-button { min-height: 44px; padding: 8px 4px; }
+.task-check, .save-plant { width: 44px; height: 44px; }
+.save-plant { top: 8px; right: 8px; }
+button, select, input:not([type="checkbox"]):not([type="radio"]), textarea {
+  font-size: max(16px, 1em);
+}
+input:not([type="checkbox"]):not([type="radio"]), select, textarea {
+  min-height: 48px;
+}
+.filter-select select { min-height: 44px; }
+input[type="checkbox"], input[type="radio"] { accent-color: var(--green); }
+a { text-underline-offset: .15em; }
+button:disabled { cursor: not-allowed; }
+.api-status, .auth-status { line-height: 1.6; }
+@media (prefers-contrast: more) {
+  :root { --muted: #33483f; --line: #7c8b80; }
+  :where(a, button, input, select, textarea, summary):focus-visible {
+    outline-width: 4px;
+  }
+  .outline-button, .filter-tab, .filter-select select { border-width: 2px; }
 }

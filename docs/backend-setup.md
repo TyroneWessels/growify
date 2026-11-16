@@ -4,6 +4,10 @@
 
 De website gebruikt Supabase Auth en de tabel `public.sproutly_user_data` voor accounts en plantgegevens. Voer [setup.sql](../supabase/setup.sql) uit in de SQL Editor van het eigen Supabase-project. De tabel gebruikt Row Level Security en de SQL staat ingelogde gebruikers alleen toe hun eigen gegevens te beheren. De browser gebruikt uitsluitend de publiceerbare sleutel; voeg nooit een geheime sleutel of service-role-sleutel toe aan de website.
 
+De setup maakt ook `public.sproutly_push_subscriptions` aan voor webpushabonnementen. Deze tabel is alleen toegankelijk voor ingelogde gebruikers en Row Level Security beperkt iedere gebruiker tot de eigen abonnementen. De endpoint- en encryptiesleutels van een pushabonnement zijn gevoelige gegevens. Pushmeldingen werken pas nadat de browser inschrijven, een serverfunctie verzenden en de geplande GitHub Actions-workflow zijn ingericht; alleen de tabel toevoegen verstuurt nog geen meldingen.
+
+Zie [push-reminders.md](./push-reminders.md) voor de volledige inrichting van VAPID-sleutels, Supabase Secrets, de Edge Function en GitHub Actions.
+
 Bij het maken van een account worden de planten en verzorgingsgegevens uit de huidige browser naar dat nieuwe account gekopieerd. Bestaande lokale Node-accounts worden niet automatisch overgezet. Supabase moet bij **Authentication → Sign In / Providers → Email** zijn ingesteld op de gewenste e-mailbevestiging. Zonder e-mailbevestiging wordt niet gecontroleerd of de gebruiker het opgegeven adres bezit.
 
 Elke toegevoegde plant is een eigen exemplaar met een uniek ID, een profiel en een verzorgingslogboek. Daardoor kunnen meerdere planten van dezelfde soort naast elkaar bestaan. Op de plantpagina wissel je met de keuzelijst tussen je exemplaren; geef ze een eigen naam om ze makkelijk te herkennen. Oudere planten die op soortnaam zijn opgeslagen blijven beschikbaar met hun bestaande gegevens en verzorgingsmomenten; nieuwe exemplaren krijgen een eigen ID. Verwijderen via Mijn planten verwijdert na bevestiging alleen dat exemplaar en de bijbehorende gegevens. De website blijft de bestaande JSON-structuur in Supabase gebruiken; er is geen nieuwe SQL-migratie nodig.

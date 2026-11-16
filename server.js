@@ -14,6 +14,33 @@ const maxBodyBytes = 2 * 1024 * 1024;
 const failedAuthAttempts = new Map();
 const authRateLimitWindowMs = 15 * 60 * 1000;
 const authRateLimitMaxAttempts = 10;
+const publicRootFiles = new Set([
+  "account-venster.css",
+  "account.js",
+  "care-schedule.js",
+  "catalogus.js",
+  "herstel.css",
+  "herstel.html",
+  "herstel.js",
+  "index.html",
+  "kalender.html",
+  "mijn-planten.html",
+  "pagina.js",
+  "plant-instances.js",
+  "plant.html",
+  "plant.js",
+  "plantencollectie.js",
+  "planten.html",
+  "pwa.js",
+  "push-config.js",
+  "push-notifications.js",
+  "rondleiding.js",
+  "service-worker.js",
+  "script.js",
+  "manifest.webmanifest",
+  "styles.css"
+]);
+const publicPageDirectories = new Set(["herstel", "kalender", "mijn-planten", "plant", "planten"]);
 
 const emptyState = () => ({
   savedPlants: [],
@@ -214,6 +241,7 @@ function contentType(filePath) {
     ".html": "text/html; charset=utf-8",
     ".css": "text/css; charset=utf-8",
     ".js": "text/javascript; charset=utf-8",
+    ".webmanifest": "application/manifest+json; charset=utf-8",
     ".svg": "image/svg+xml",
     ".png": "image/png",
     ".jpg": "image/jpeg",
@@ -222,11 +250,25 @@ function contentType(filePath) {
   }[extension] || "application/octet-stream";
 }
 
+function isPublicStaticPath(relativePath) {
+  const pathSegments = relativePath.split(path.sep);
+  const isPublicRootFile = pathSegments.length === 1 && publicRootFiles.has(pathSegments[0]);
+  const isPublicPageDirectory = pathSegments.length === 1 && publicPageDirectories.has(pathSegments[0]);
+  const isPublicPage = pathSegments.length === 2
+    && publicPageDirectories.has(pathSegments[0])
+    && pathSegments[1] === "index.html";
+  const isPublicAsset = pathSegments[0] === "assets"
+    && pathSegments.length > 1
+    && pathSegments.every((segment) => segment && !segment.startsWith("."));
+  return !relativePath.startsWith("..") && !path.isAbsolute(relativePath)
+    && (isPublicRootFile || isPublicPageDirectory || isPublicPage || isPublicAsset);
+}
+
 async function serveStatic(request, response, pathname) {
   const relativePath = pathname === "/" ? "index.html" : pathname.slice(1);
   let filePath = path.resolve(rootDirectory, relativePath);
   const relativeToRoot = path.relative(rootDirectory, filePath);
-  if (relativeToRoot.startsWith("..") || path.isAbsolute(relativeToRoot)) {
+  if (!isPublicStaticPath(relativeToRoot)) {
     sendError(response, 404, "Niet gevonden.");
     return;
   }
@@ -240,6 +282,11 @@ async function serveStatic(request, response, pathname) {
         return;
       }
       filePath = path.join(filePath, "index.html");
+    }
+    filePath = await fs.realpath(filePath);
+    if (!isPublicStaticPath(path.relative(rootDirectory, filePath))) {
+      sendError(response, 404, "Niet gevonden.");
+      return;
     }
     const file = await fs.readFile(filePath);
     response.writeHead(200, {

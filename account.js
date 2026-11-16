@@ -11,6 +11,10 @@
     return { id: user.id, email: user.email, displayName: user.user_metadata?.display_name || user.email };
   }
 
+  function notifyAuthChanged() {
+    if (typeof Event === "function") window.dispatchEvent(new Event("sproutly-auth-change"));
+  }
+
   function updateHeader(user) {
     const link = document.querySelector("a.profile-button");
     if (!link) return;
@@ -83,6 +87,7 @@
       console.error("Browsergegevens konden niet naar het nieuwe account worden gekopieerd:", saveError);
       throw new Error("Je account is aangemaakt, maar je planten konden niet worden overgezet. Je browsergegevens zijn bewaard.");
     }
+    notifyAuthChanged();
     return user;
   }
 
@@ -104,6 +109,7 @@
       console.error("Browsergegevens overzetten mislukt:", importError);
       throw new Error("Je planten konden nog niet worden overgezet. Je browsergegevens zijn bewaard; probeer opnieuw in te loggen.");
     }
+    notifyAuthChanged();
     return userDetails(data.user);
   }
 
@@ -113,6 +119,7 @@
     baseline = null;
     baselineUserId = null;
     stateExists = false;
+    notifyAuthChanged();
   }
 
   async function requestPasswordReset(email, redirectTo) {
@@ -137,5 +144,69 @@
     await client.auth.signOut({ scope: "local" });
   }
 
-  window.SproutlyAccount = { getUser, getState, saveState, register, login, logout, deleteAccount, requestPasswordReset, onPasswordRecovery, updatePassword };
+  async function getPushSubscription(endpoint) {
+    const user = await getUser();
+    if (!user) throw new Error("Log in om pushmeldingen te beheren.");
+    const { data, error } = await client.from("sproutly_push_subscriptions")
+      .select("preferred_time")
+      .eq("user_id", user.id)
+      .eq("endpoint", endpoint)
+      .maybeSingle();
+    if (error) throw error;
+    return data;
+  }
+
+  async function savePushSubscription(subscription, timeZone, preferredTime) {
+    const user = await getUser();
+    if (!user) throw new Error("Log in om pushmeldingen in te schakelen.");
+    const { endpoint, keys } = subscription.toJSON();
+    if (!endpoint || !keys?.p256dh || !keys?.auth) throw new Error("De browser heeft geen geldig pushabonnement gemaakt.");
+    const { error } = await client.from("sproutly_push_subscriptions").upsert({
+      endpoint,
+      user_id: user.id,
+      p256dh: keys.p256dh,
+      auth: keys.auth,
+      time_zone: timeZone,
+      preferred_time: preferredTime
+    }, { onConflict: "endpoint" });
+    if (error) throw error;
+  }
+
+  async function deletePushSubscription(endpoint) {
+    const user = await getUser();
+    if (!user) throw new Error("Log in om pushmeldingen uit te zetten.");
+    const { error } = await client.from("sproutly_push_subscriptions")
+      .delete()
+      .eq("user_id", user.id)
+      .eq("endpoint", endpoint);
+    if (error) throw error;
+  }
+
+  async function callPushTestFunction(action, endpoint) {
+    const { data, error } = await client.auth.getSession();
+    if (error) throw error;
+    if (!data.session) throw new Error("Log in om de pushmelding te testen.");
+
+    const response = await fetch(`${projectUrl}/functions/v1/send-reminders`, {
+      method: "POST",
+      headers: {
+        apikey: publishableKey,
+        Authorization: `Bearer ${data.session.access_token}`,
+        "Content-Type": "application/json"
+      },
+      body: JSON.stringify({ action, endpoint })
+    });
+    const result = await response.json();
+    if (response.status === 403 && result.authorized === false) return result;
+    if (!response.ok) throw new Error(result.error || "De testmelding kon niet worden verstuurd.");
+    return result;
+  }
+
+  window.SproutlyAccount = {
+    getUser, getState, saveState, register, login, logout, deleteAccount,
+    getPushSubscription, savePushSubscription, deletePushSubscription,
+    checkPushTestAdmin: () => callPushTestFunction("check-admin"),
+    sendPushTestNotification: (endpoint) => callPushTestFunction("test", endpoint),
+    requestPasswordReset, onPasswordRecovery, updatePassword
+  };
 })();

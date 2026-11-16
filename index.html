@@ -3,12 +3,17 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="theme-color" content="#2f7259" />
+  <meta name="apple-mobile-web-app-capable" content="yes" />
+  <meta name="apple-mobile-web-app-title" content="Growify" />
+  <link rel="manifest" href="manifest.webmanifest" />
   <meta name="description" content="Growify helpt je om elke plant gelukkig te houden met eenvoudige, seizoensgebonden verzorging." />
   <meta property="og:title" content="Growify | Planten verzorgen wordt makkelijk" />
   <meta property="og:description" content="Vind snel begrijpelijke verzorgingstips voor jouw planten." />
   <meta property="og:type" content="website" />
   <meta name="twitter:card" content="summary" />
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='16' fill='%232f7259'/%3E%3Ctext x='32' y='44' text-anchor='middle' font-size='38' fill='white'%3E✦%3C/text%3E%3C/svg%3E" />
+  <link rel="icon" href="assets/pwa-icon-192.png" type="image/png" />
+  <link rel="apple-touch-icon" href="assets/pwa-icon-192.png" />
   <title>Growify | Planten verzorgen wordt makkelijk</title>
   <link rel="stylesheet" href="styles.css" />
   <link rel="stylesheet" href="account-venster.css" />
@@ -204,6 +209,19 @@
         <p>Ontvang een melding op dagen met verzorgingsmomenten. Dit werkt zolang de homepage, Mijn planten of de kalender open is in deze browser.</p>
         <button class="outline-button" id="reminder-button" type="button">Verzorgingsmeldingen inschakelen</button>
         <p class="reminder-status" id="reminder-status" role="status" aria-live="polite"></p>
+        <div class="push-reminder-settings">
+          <label for="push-reminder-time">Dagelijkse telefoonmelding</label>
+          <input id="push-reminder-time" type="time" value="18:00" />
+          <button class="outline-button" id="push-reminder-button" type="button">Dagelijkse melding aanzetten</button>
+          <button class="outline-button" id="push-reminder-disable" type="button" hidden>Meldingen uitzetten</button>
+          <p class="reminder-status" id="push-reminder-status" role="status" aria-live="polite">Alleen beschikbaar voor ingelogde gebruikers. Standaardtijd: 18:00 lokale tijd.</p>
+        </div>
+        <div class="push-test-admin" id="push-test-admin" hidden>
+          <h3>Beheer · testmelding</h3>
+          <p>Stuur een testmelding naar dit apparaat zonder op het dagelijkse tijdstip of een openstaande taak te wachten.</p>
+          <button class="outline-button" id="push-test-button" type="button">Stuur testmelding</button>
+          <p class="reminder-status" id="push-test-status" role="status" aria-live="polite"></p>
+        </div>
       </section>
     </main>
 
@@ -315,5 +333,8 @@
   <script src="account.js"></script>
   <script src="script.js"></script>
   <script src="rondleiding.js"></script>
+  <script src="pwa.js"></script>
+  <script src="push-config.js"></script>
+  <script src="push-notifications.js"></script>
 </body>
 </html>
