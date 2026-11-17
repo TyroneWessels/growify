@@ -1,6 +1,6 @@
 import { createClient } from "@supabase/supabase-js";
 import webPush from "web-push";
-import { buildReminderPayload, buildTestReminderPayload, getDueWateringTasks, getLocalDateTime, isAllowedPushEndpoint, isPushTestAdmin, isWithinReminderWindow } from "@shared/reminder-logic";
+import { buildReminderPayload, buildTestReminderPayload, getDueWateringTasks, getLocalDateTime, isAllowedPushEndpoint, isPushTestAdmin, isReminderCooldownActive, isWithinReminderWindow } from "@shared/reminder-logic";
 
 const pageSize = 500;
 const userBatchSize = 100;
@@ -151,7 +151,7 @@ Deno.serve(async (request: Request) => {
         const timeZone = subscription.time_zone || defaultTimeZone;
         const preferredTime = subscription.preferred_time || "18:00";
         const local = getLocalDateTime(now, timeZone);
-        if (subscription.last_sent_date === local.date
+        if (isReminderCooldownActive(subscription.last_sent_date, local.date)
           || !isWithinReminderWindow(now, timeZone, preferredTime, reminderWindowMinutes)) {
           result.skipped += 1;
           continue;

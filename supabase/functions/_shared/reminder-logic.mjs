@@ -161,6 +161,10 @@ export function isWithinReminderWindow(date, timeZone, preferredTime, windowMinu
   return elapsedMinutes >= 0 && elapsedMinutes < windowMinutes;
 }
 
+export function isReminderCooldownActive(lastSentDate, localDate) {
+  return lastSentDate === localDate;
+}
+
 export function isAllowedPushEndpoint(value) {
   try {
     const url = new URL(value);

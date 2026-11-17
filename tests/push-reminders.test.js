@@ -48,6 +48,18 @@ test("reminders run at or shortly after the user's local preferred time", () => 
   assert.deepEqual(reminderLogic.getLocalDateTime(onTime, "Europe/Amsterdam"), { date: "2026-11-16", hour: 18, minute: 17 });
 });
 
+test("the mobile reminder cooldown resets at midnight in the device timezone", () => {
+  const beforeMidnight = new Date("2026-11-16T22:59:00Z");
+  const afterMidnight = new Date("2026-11-16T23:00:00Z");
+  const localDateBeforeMidnight = reminderLogic.getLocalDateTime(beforeMidnight, "Europe/Amsterdam").date;
+  const localDateAfterMidnight = reminderLogic.getLocalDateTime(afterMidnight, "Europe/Amsterdam").date;
+
+  assert.equal(localDateBeforeMidnight, "2026-11-16");
+  assert.equal(localDateAfterMidnight, "2026-11-17");
+  assert.equal(reminderLogic.isReminderCooldownActive(localDateBeforeMidnight, localDateBeforeMidnight), true);
+  assert.equal(reminderLogic.isReminderCooldownActive(localDateBeforeMidnight, localDateAfterMidnight), false);
+});
+
 test("push payload summarizes plant tasks and opens the care calendar", () => {
   const payload = reminderLogic.buildReminderPayload([
     { plantName: "Monstera", title: "Controleer de aarde" },

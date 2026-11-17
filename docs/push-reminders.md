@@ -75,7 +75,7 @@ Controleer of `push-config.js` de openbare VAPID-sleutel bevat. Als de tekst `PA
 ## Gedrag en beperkingen
 
 - Herinneringen zijn alleen beschikbaar voor ingelogde gebruikers met plantgegevens in Supabase. Planten die alleen lokaal in de browser staan, kunnen niet door een geplande workflow worden gecontroleerd.
-- De standaardtijd is 18:00 in de tijdzone van het apparaat toen de gebruiker zich aanmeldde. De gebruiker kan een andere tijd kiezen.
+- De standaardtijd is 18:00 in de tijdzone van het apparaat toen de gebruiker zich aanmeldde. De gebruiker kan een andere tijd kiezen. De dagelijkse verzendbeperking wordt om 00:00 in diezelfde tijdzone opnieuw beschikbaar.
 - De workflow draait elk uur en de functie laat een melding toe vanaf de gekozen tijd tot drie uur daarna. GitHub Actions kan vertraagd starten; bezorging op de exacte minuut is niet gegarandeerd.
 - Er wordt alleen gemeld als er nog een grondcontrole openstaat. Er wordt maximaal één melding per apparaat per lokale dag gestuurd. Ongeldige abonnementen worden opgeruimd.
 - Browsermeldingen zijn daarnaast afhankelijk van toestemming, internet en instellingen van de telefoon.
