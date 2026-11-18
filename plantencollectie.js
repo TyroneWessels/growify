@@ -30,7 +30,24 @@ window.SPROUTLY_PLANTS = [
   { name: "Varen", aliases: ["krulvaren", "boston fern"], scientific: "Nephrolepis exaltata", category: "Binnenplant", filter: "indoor", art: "art-herb", light: "Indirect licht", lightLevel: "medium", difficulty: "medium", type: "Kamerplant" },
   { name: "Kroton", aliases: ["wonderstruik", "croton"], scientific: "Codiaeum variegatum", category: "Binnenplant", filter: "indoor", art: "art-monstera", light: "Veel indirect licht", lightLevel: "high", difficulty: "medium", type: "Kamerplant" },
   { name: "Flamingoplant", aliases: ["anthurium"], scientific: "Anthurium andraeanum", category: "Binnenplant", filter: "indoor", art: "art-lavender", light: "Helder indirect licht", lightLevel: "medium", difficulty: "medium", type: "Kamerplant" },
-  { name: "Ficus benjamina", aliases: ["treurvijg", "weeping fig"], scientific: "Ficus benjamina", category: "Binnenplant", filter: "indoor", art: "art-monstera", light: "Helder indirect licht", lightLevel: "medium", difficulty: "medium", type: "Kamerplant" }
+  { name: "Ficus benjamina", aliases: ["treurvijg", "weeping fig"], scientific: "Ficus benjamina", category: "Binnenplant", filter: "indoor", art: "art-monstera", light: "Helder indirect licht", lightLevel: "medium", difficulty: "medium", type: "Kamerplant" },
+  { name: "Hortensia", aliases: ["boerenhortensia", "hydrangea"], scientific: "Hydrangea macrophylla", category: "Buitenplant", filter: "outdoor", art: "art-lavender", light: "Halfschaduw", lightLevel: "medium", difficulty: "easy", type: "Heester" },
+  { name: "Roos", aliases: ["rozenstruik", "garden rose"], scientific: "Rosa", category: "Buitenplant", filter: "outdoor", art: "art-lavender", light: "Zonnige plek", lightLevel: "high", difficulty: "medium", type: "Heester" },
+  { name: "Aardbei", aliases: ["tuinaardbei", "strawberry"], scientific: "Fragaria × ananassa", category: "Buitenplant", filter: "outdoor", art: "art-tomato", light: "Zonnige plek", lightLevel: "high", difficulty: "easy", type: "Fruitplant" },
+  { name: "Munt", aliases: ["spearmint", "kruizemunt"], scientific: "Mentha spicata", category: "Kruid", filter: "outdoor", art: "art-herb", light: "Zon of lichte schaduw", lightLevel: "medium", difficulty: "easy", type: "Kruid" },
+  { name: "Peterselie", aliases: ["parsley", "krulpeterselie"], scientific: "Petroselinum crispum", category: "Kruid", filter: "outdoor", art: "art-herb", light: "Zon of lichte schaduw", lightLevel: "medium", difficulty: "easy", type: "Kruid" },
+  { name: "Zonnebloem", aliases: ["sunflower"], scientific: "Helianthus annuus", category: "Buitenplant", filter: "outdoor", art: "art-lavender", light: "Volle zon", lightLevel: "high", difficulty: "easy", type: "Bloem" },
+  { name: "Tulp", aliases: ["tulpen"], scientific: "Tulipa gesneriana", category: "Buitenplant", filter: "outdoor", art: "art-lavender", light: "Zon of lichte schaduw", lightLevel: "high", difficulty: "easy", type: "Bloem" },
+  { name: "Komkommer", aliases: ["cucumber"], scientific: "Cucumis sativus", category: "Buitenplant", filter: "outdoor", art: "art-tomato", light: "Warme, zonnige plek", lightLevel: "high", difficulty: "medium", type: "Groente" },
+  { name: "Courgette", aliases: ["zucchini", "zucchini plant"], scientific: "Cucurbita pepo", category: "Buitenplant", filter: "outdoor", art: "art-tomato", light: "Volle zon", lightLevel: "high", difficulty: "easy", type: "Groente" },
+  { name: "Wortel", aliases: ["peen", "carrot"], scientific: "Daucus carota subsp. sativus", category: "Buitenplant", filter: "outdoor", art: "art-tomato", light: "Zonnige plek", lightLevel: "high", difficulty: "easy", type: "Groente" },
+  { name: "Sla", aliases: ["kropsla", "lettuce"], scientific: "Lactuca sativa", category: "Buitenplant", filter: "outdoor", art: "art-herb", light: "Zon of lichte schaduw", lightLevel: "medium", difficulty: "easy", type: "Groente" },
+  { name: "Aardappel", aliases: ["pieper", "potato"], scientific: "Solanum tuberosum", category: "Buitenplant", filter: "outdoor", art: "art-tomato", light: "Zonnige plek", lightLevel: "high", difficulty: "easy", type: "Groente" },
+  { name: "Doperwt", aliases: ["erwt", "garden pea"], scientific: "Pisum sativum", category: "Buitenplant", filter: "outdoor", art: "art-herb", light: "Zonnige plek", lightLevel: "high", difficulty: "easy", type: "Groente" },
+  { name: "Paprika", aliases: ["bell pepper", "rode paprika"], scientific: "Capsicum annuum", category: "Buitenplant", filter: "outdoor", art: "art-tomato", light: "Warme, zonnige plek", lightLevel: "high", difficulty: "medium", type: "Groente" },
+  { name: "Blauwe bes", aliases: ["blauwe bosbes", "blueberry"], scientific: "Vaccinium corymbosum", category: "Buitenplant", filter: "outdoor", art: "art-tomato", light: "Zon of lichte schaduw", lightLevel: "high", difficulty: "medium", type: "Fruitplant" },
+  { name: "Framboos", aliases: ["raspberry"], scientific: "Rubus idaeus", category: "Buitenplant", filter: "outdoor", art: "art-tomato", light: "Zonnige plek", lightLevel: "high", difficulty: "medium", type: "Fruitplant" },
+  { name: "Appelboom", aliases: ["appel", "apple tree"], scientific: "Malus domestica", category: "Buitenplant", filter: "outdoor", art: "art-lavender", light: "Zonnige plek", lightLevel: "high", difficulty: "medium", type: "Fruitboom" }
 ];
 
 window.SPROUTLY_DEFAULT_SAVED_PLANTS = ["Monstera", "Basilicum", "Lavendel"];
@@ -47,7 +64,7 @@ const speciesPhotos = {
   "Epipremnum aureum": ["6/62", "Money_Plant_(Epipremnum_aureum)_4.jpg"],
   "Spathiphyllum wallisii": ["4/49", "Peace_lily_-_1_-_cropped.jpg"],
   "Zamioculcas zamiifolia": ["c/cf", "Zamioculcas_zamiifolia_1.jpg"],
-  "Chlorophytum comosum": ["3/3a", "Spiderplant1.jpg"],
+  "Chlorophytum comosum": ["c/c4", "Chlorophytum comosum in China.jpg"],
   "Ficus elastica": ["1/16", "Ficus_elastica_leaves_02.JPG"],
   "Ficus lyrata": ["8/84", "Starr_031108-0130_Ficus_lyrata.jpg"],
   "Philodendron hederaceum": ["b/bb", "Philodendron_scandens_subsp_oxycardium2.jpg"],
@@ -67,7 +84,24 @@ const speciesPhotos = {
   "Nephrolepis exaltata": ["3/30", "Boston_Fern_%282873392811%29.png"],
   "Codiaeum variegatum": ["b/bf", "Colpfl05.jpg"],
   "Anthurium andraeanum": ["8/8b", "AnthuriumAndraenum.jpg"],
-  "Ficus benjamina": ["1/19", "Starr-080608-7576-Ficus_benjamina-habit_with_Laysan_albatross-Gym_Sand_Island-Midway_Atoll_%2824823189861%29.jpg"]
+  "Ficus benjamina": ["1/19", "Starr-080608-7576-Ficus_benjamina-habit_with_Laysan_albatross-Gym_Sand_Island-Midway_Atoll_%2824823189861%29.jpg"],
+  "Hydrangea macrophylla": ["2/21", "(Natural)_Hydrangea_macrophylla,_Iwafune,_Isumi,_Chiba,_Japan_2.jpg"],
+  "Rosa": ["5/5e", "Rosa_Peace_1945.jpg"],
+  "Fragaria × ananassa": ["4/4c", "Garden_strawberry_(Fragaria_×_ananassa)_single2.jpg"],
+  "Mentha spicata": ["0/05", "Minze.jpg"],
+  "Petroselinum crispum": ["e/e4", "Petroselinum.jpg"],
+  "Helianthus annuus": ["4/40", "Sunflower_sky_backdrop.jpg"],
+  "Tulipa gesneriana": ["9/9e", "צבעונים.JPG"],
+  "Cucumis sativus": ["9/96", "ARS_cucumber.jpg"],
+  "Cucurbita pepo": ["9/9d", "Calabacín, Múnich, Alemania, 2013-03-30, DD 01.JPG"],
+  "Daucus carota subsp. sativus": ["3/32", "Carrots of many colors.jpg"],
+  "Lactuca sativa": ["6/6b", "Romaine lettuce.jpg"],
+  "Solanum tuberosum": ["9/99", "Potato flowers 2016 G1.jpg"],
+  "Pisum sativum": ["d/df", "Pisum sativum MHNT.BOT.2010.12.9.jpg"],
+  "Capsicum annuum": ["2/23", "Baby Bell pepper Capsicum annuum 3.jpg"],
+  "Vaccinium corymbosum": ["6/6b", "High-bush Blueberry - Vaccinium corymbosum, Julie Metz Wetlands, Woodbridge, Virginia.jpg"],
+  "Rubus idaeus": ["9/97", "2018-06-18 (102) Rubus idaeus (raspberry) at Bichlhäusl in Frankenfels, Austria.jpg"],
+  "Malus domestica": ["8/86", "Apple-tree blossoms 2017 G3.jpg"]
 };
 
 const soilCheckIntervals = {
@@ -102,7 +136,24 @@ const soilCheckIntervals = {
   "Nephrolepis exaltata": 4,
   "Codiaeum variegatum": 7,
   "Anthurium andraeanum": 7,
-  "Ficus benjamina": 7
+  "Ficus benjamina": 7,
+  "Hydrangea macrophylla": 5,
+  "Rosa": 7,
+  "Fragaria × ananassa": 3,
+  "Mentha spicata": 3,
+  "Petroselinum crispum": 4,
+  "Helianthus annuus": 4,
+  "Tulipa gesneriana": 14,
+  "Cucumis sativus": 3,
+  "Cucurbita pepo": 3,
+  "Daucus carota subsp. sativus": 5,
+  "Lactuca sativa": 3,
+  "Solanum tuberosum": 7,
+  "Pisum sativum": 5,
+  "Capsicum annuum": 3,
+  "Vaccinium corymbosum": 7,
+  "Rubus idaeus": 5,
+  "Malus domestica": 7
 };
 
 window.SPROUTLY_PLANTS.forEach((plant) => {

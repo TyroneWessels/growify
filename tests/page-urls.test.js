@@ -18,6 +18,11 @@ test("directory pages match their legacy counterparts and use the deployment roo
   }
 });
 
+test("the plant catalog defaults to alphabetical order", () => {
+  const catalogPage = fs.readFileSync(path.join(root, "planten.html"), "utf8");
+  assert.match(catalogPage, /<option value="name" selected>Naam A–Z<\/option>/);
+});
+
 test("care reminders load on every page that monitors the care schedule", () => {
   for (const page of ["index", "mijn-planten", "kalender"]) {
     const source = fs.readFileSync(path.join(root, `${page}.html`), "utf8");
