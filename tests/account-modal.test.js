@@ -75,6 +75,18 @@ test("all account headers initially show signed-out text", () => {
   }
 });
 
+test("sign-in links on secondary pages open the home page account modal", () => {
+  for (const page of ["mijn-planten", "kalender", "planten", "plant"]) {
+    const source = fs.readFileSync(path.join(__dirname, "..", `${page}.html`), "utf8");
+    const directory = fs.readFileSync(path.join(__dirname, "..", page, "index.html"), "utf8");
+    assert.match(source, /<a class="profile-button" href="\.\/\?account=1" aria-label="Inloggen of account maken"/, page);
+    assert.match(directory, /<a class="profile-button" href="\.\/\?account=1" aria-label="Inloggen of account maken"/, `${page} directory page`);
+    assert.match(directory, /<base href="\.\.\/"/, `${page} deployment base`);
+    const target = new URL("./?account=1", new URL("../", `https://example.test/project/${page}/`));
+    assert.equal(target.href, "https://example.test/project/?account=1", page);
+  }
+});
+
 test("the collection page has one shared sign-in control in the header", () => {
   const html = fs.readFileSync(path.join(__dirname, "..", "mijn-planten.html"), "utf8");
   assert.match(html, /class="profile-button"[^>]*>[\s\S]*class="profile-name">Inloggen<\/span>/);
