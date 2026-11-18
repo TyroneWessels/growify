@@ -363,6 +363,7 @@ h2 span { color: #cf7d5f; }
 .calendar-nav:hover { border-color: var(--green); background: var(--light-green); }
 .calendar-layout { display: grid; grid-template-columns: 1.35fr .65fr; align-items: start; gap: 15px; }
 .calendar-card, .calendar-day-card { padding: 22px; border-radius: 9px; background: var(--paper); }
+#selected-day-events { max-height: min(60vh, 32rem); overflow-y: auto; overscroll-behavior: contain; }
 .calendar-weekdays, .calendar-grid { display: grid; grid-template-columns: repeat(7, 1fr); gap: 7px; }
 .calendar-weekdays { margin-bottom: 8px; color: var(--muted); font-size: 9px; text-align: center; text-transform: uppercase; }
 .calendar-day { position: relative; display: flex; align-items: flex-start; justify-content: center; min-height: 55px; padding: 9px 5px; border: 1px solid transparent; border-radius: 6px; background: #f9faf5; color: var(--ink); font-size: 14px; }

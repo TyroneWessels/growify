@@ -544,6 +544,7 @@ calendarGrid.addEventListener("click", (event) => {
   if (!dayButton) return;
   const [year, month, day] = dayButton.dataset.calendarDate.split("-").map(Number);
   selectedCalendarDate = new Date(year, month - 1, day);
+  selectedDayEvents.scrollTop = 0;
   renderCalendar();
 });
 
