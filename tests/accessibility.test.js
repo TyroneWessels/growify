@@ -64,6 +64,11 @@ test("the header separates notification settings from the notification center", 
   assert.match(settings, /id="notification-center-open" href="#care-notifications"/);
 });
 
+test("the upcoming notifications list scrolls within a limited height", () => {
+  const styles = fs.readFileSync(path.join(root, "styles.css"), "utf8");
+  assert.match(styles, /\.notification-list\s*\{[^}]*max-height:\s*min\(55vh,\s*26rem\);[^}]*overflow-y:\s*auto;/);
+});
+
 test("notification settings open from the URL and close back to the center", () => {
   const handlers = {};
   const windowHandlers = {};
