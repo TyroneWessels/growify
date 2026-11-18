@@ -318,6 +318,7 @@ h2 span { color: #cf7d5f; }
 .collection-header { display: flex; justify-content: space-between; padding-bottom: 15px; border-bottom: 1px solid var(--line); font-size: 14px; }
 .collection-header small { margin-left: 7px; color: var(--muted); font-size: 10px; font-weight: 400; }
 .more-button { color: var(--muted); letter-spacing: 2px; }
+#collection-list { max-height: min(55vh, 26rem); overflow-y: auto; overscroll-behavior: contain; }
 .collection-item { display: grid; grid-template-columns: 39px 1fr auto; align-items: center; gap: 12px; padding: 15px 0; border-bottom: 1px solid #edf0e9; }
 .collection-item > span:nth-child(2) { display: grid; gap: 4px; font-size: 12px; }
 .collection-item small { color: var(--muted); font-family: var(--serif); font-size: 10px; font-style: italic; }
@@ -335,7 +336,8 @@ h2 span { color: #cf7d5f; }
 .date-badge { padding: 8px 12px; border-radius: 16px; background: var(--light-green); color: var(--green); font-size: 10px; text-transform: capitalize; }
 .care-plan-grid { display: grid; grid-template-columns: 1.05fr .95fr; align-items: start; gap: 15px; }
 .today-card, .week-card { min-height: 180px; padding: 22px; border-radius: 9px; background: var(--paper); }
-#today-tasks { max-height: min(60vh, 32rem); overflow-y: auto; overscroll-behavior: contain; }
+.week-card { align-self: start; min-height: 0; }
+#today-tasks { max-height: min(42vh, 20rem); overflow-y: auto; overscroll-behavior: contain; }
 .today-card-header, .week-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; font-size: 13px; }
 .today-card-header span, .week-card-header span { color: var(--muted); font-size: 10px; }
 .care-task { display: flex; align-items: center; width: 100%; gap: 11px; padding: 9px 0; border: 0; border-top: 1px solid var(--line); background: transparent; color: var(--ink); text-align: left; }
