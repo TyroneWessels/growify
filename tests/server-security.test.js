@@ -16,6 +16,7 @@ test("static server exposes website files but not private or server files", asyn
   await fs.writeFile(path.join(root, "index.html"), "<main>Growify</main>");
   await fs.writeFile(path.join(root, "styles.css"), "body { color: green; }");
   await fs.writeFile(path.join(root, "script.js"), "console.log('Growify');");
+  await fs.writeFile(path.join(root, "toegankelijkheid.js"), "console.log('Toegankelijkheid');");
   await fs.writeFile(path.join(root, "assets", "plant.svg"), "<svg />");
   await fs.writeFile(path.join(root, "planten", "index.html"), "<main>Planten</main>");
   await fs.writeFile(path.join(root, "data", "sproutly.json"), '{"users":[{"email":"private@example.test","passwordHash":"secret"}]}');
@@ -43,7 +44,7 @@ test("static server exposes website files but not private or server files", asyn
   });
 
   const baseUrl = `http://127.0.0.1:${port}`;
-  for (const pathname of ["/", "/styles.css", "/script.js", "/planten/", "/assets/plant.svg"]) {
+  for (const pathname of ["/", "/styles.css", "/script.js", "/toegankelijkheid.js", "/planten/", "/assets/plant.svg"]) {
     const response = await fetch(`${baseUrl}${pathname}`);
     assert.equal(response.status, 200, pathname);
   }

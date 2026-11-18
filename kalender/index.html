@@ -38,14 +38,23 @@
       </div>
     </header>
     <div class="accessibility-tools">
-      <button class="accessibility-toggle" type="button" aria-label="Grotere tekst instellen" aria-pressed="false">
-        <span aria-hidden="true">A+</span>
-        <span class="accessibility-toggle-label">Grotere tekst</span>
-      </button>
-      <button class="contrast-toggle" type="button" aria-label="Hoog contrast instellen" aria-pressed="false">
-        <span aria-hidden="true">HC</span>
-        <span class="accessibility-toggle-label">Hoog contrast</span>
-      </button>
+      <details class="accessibility-menu">
+        <summary aria-controls="accessibility-options">
+          <span aria-hidden="true">Aa</span>
+          <span>Toegankelijkheid</span>
+          <span class="accessibility-menu-chevron" aria-hidden="true">⌄</span>
+        </summary>
+        <div class="accessibility-menu-panel" id="accessibility-options" role="group" aria-label="Weergavevoorkeuren">
+          <button class="accessibility-toggle" type="button" aria-label="Grotere tekst instellen" aria-pressed="false">
+            <span aria-hidden="true">A+</span>
+            <span class="accessibility-toggle-label">Grotere tekst</span>
+          </button>
+          <button class="contrast-toggle" type="button" aria-label="Hoog contrast instellen" aria-pressed="false">
+            <span aria-hidden="true">HC</span>
+            <span class="accessibility-toggle-label">Hoog contrast</span>
+          </button>
+        </div>
+      </details>
     </div>
     <main id="page-main" tabindex="-1">
       <section class="page-intro">

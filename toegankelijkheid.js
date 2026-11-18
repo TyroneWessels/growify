@@ -58,4 +58,16 @@
       }
     });
   }
+
+  const menu = document.querySelector(".accessibility-menu");
+  if (menu) {
+    document.addEventListener?.("pointerdown", (event) => {
+      if (menu.open && !menu.contains(event.target)) menu.open = false;
+    });
+    document.addEventListener?.("keydown", (event) => {
+      if (event.key !== "Escape" || !menu.open) return;
+      menu.open = false;
+      menu.querySelector("summary").focus();
+    });
+  }
 })();

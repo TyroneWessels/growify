@@ -487,6 +487,7 @@ h2 span { color: #cf7d5f; }
 @media (max-width: 590px) {
   .page-shell { padding: 0 18px; }
   .site-header { height: 76px; }
+  .accessibility-tools { padding-right: 18px; padding-left: 18px; }
   .main-nav { display: none; }
   .header-actions { margin-left: auto; }
   .hero { min-height: 480px; margin: 0 -18px; padding: 46px 8%; align-items: start; }
@@ -927,9 +928,60 @@ button:disabled { cursor: not-allowed; }
   .accessibility-tools { padding-right: 24px; padding-left: 24px; }
 }
 
-.accessibility-tools { flex-wrap: wrap; gap: 8px; }
+.accessibility-tools { position: relative; z-index: 20; }
+.accessibility-menu { position: relative; }
+.accessibility-menu > summary {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
+  gap: 8px;
+  padding: 5px 11px 5px 6px;
+  border: 1px solid #c4d9c8;
+  border-radius: 999px;
+  background: #fff;
+  color: var(--ink);
+  box-shadow: 0 2px 6px rgba(37, 75, 58, .08);
+  font-size: 13px;
+  font-weight: 700;
+  cursor: pointer;
+  list-style: none;
+}
+.accessibility-menu > summary::-webkit-details-marker { display: none; }
+.accessibility-menu > summary::marker { content: ""; }
+.accessibility-menu > summary:hover, .accessibility-menu[open] > summary {
+  border-color: #8eaf98;
+  background: #f7fbf7;
+  box-shadow: 0 3px 9px rgba(37, 75, 58, .13);
+}
+.accessibility-menu > summary > span:first-child {
+  display: grid;
+  width: 30px;
+  height: 30px;
+  place-items: center;
+  border-radius: 50%;
+  background: #eaf4ec;
+  color: var(--green);
+  font-size: 14px;
+  font-weight: 800;
+}
+.accessibility-menu-chevron { transition: transform .18s ease; }
+.accessibility-menu[open] .accessibility-menu-chevron { transform: rotate(180deg); }
+.accessibility-menu-panel {
+  position: absolute;
+  top: calc(100% + 8px);
+  right: 0;
+  display: grid;
+  min-width: 220px;
+  gap: 8px;
+  padding: 12px;
+  border: 1px solid #d5e0d1;
+  border-radius: 14px;
+  background: var(--paper);
+  box-shadow: 0 12px 28px rgba(23, 60, 50, .18);
+}
 .accessibility-toggle, .contrast-toggle {
   display: inline-flex;
+  width: 100%;
   min-width: 44px;
   min-height: 44px;
   align-items: center;
@@ -972,7 +1024,7 @@ button:disabled { cursor: not-allowed; }
 .accessibility-toggle-label { white-space: nowrap; }
 .accessibility-toggle:focus-visible, .contrast-toggle:focus-visible { outline: 3px solid #527f60; outline-offset: 3px; }
 @media (prefers-reduced-motion: reduce) {
-  .accessibility-toggle, .contrast-toggle { transition: none; }
+  .accessibility-toggle, .contrast-toggle, .accessibility-menu-chevron { transition: none; }
 }
 .header-actions { gap: 12px; }
 .recovery-header { display: flex; align-items: center; justify-content: space-between; gap: 16px; }
@@ -980,7 +1032,7 @@ button:disabled { cursor: not-allowed; }
   display: flex;
   width: min(100%, 1240px);
   justify-content: flex-end;
-  margin: -12px auto 0;
+  margin: 0 auto 12px;
   padding: 0 42px;
 }
 .recovery-accessibility-tools {
@@ -1056,7 +1108,6 @@ html.high-contrast :is(a, button, input, select, textarea, summary):focus-visibl
   .header-actions { gap: 8px; }
   .site-header { gap: 12px; }
   .accessibility-toggle, .contrast-toggle { padding-right: 8px; padding-left: 8px; }
-  .accessibility-tools { padding-right: 18px; padding-left: 18px; }
 }
 @media (max-width: 380px) {
   .disclosure-action { padding: 0 8px; }
@@ -1129,4 +1180,7 @@ html.high-contrast :is(a, button, input, select, textarea, summary):focus-visibl
 }
 @media (max-width: 400px) {
   .recovery-accessibility-tools { width: calc(100% - 32px); }
+}
+@media (max-width: 590px) {
+  .accessibility-tools { justify-content: flex-start; }
 }

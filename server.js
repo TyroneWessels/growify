@@ -37,6 +37,7 @@ const publicRootFiles = new Set([
   "rondleiding.js",
   "service-worker.js",
   "script.js",
+  "toegankelijkheid.js",
   "manifest.webmanifest",
   "styles.css"
 ]);

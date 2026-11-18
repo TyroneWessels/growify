@@ -10,10 +10,45 @@ const preferenceScript = fs.readFileSync(path.join(root, "toegankelijkheid.js"),
 test("all pages offer clearly labelled text-size and contrast preferences", () => {
   for (const page of ["index", "planten", "mijn-planten", "kalender", "plant", "herstel"]) {
     const html = fs.readFileSync(path.join(root, `${page}.html`), "utf8");
+    assert.match(html, /<details class="accessibility-menu">[\s\S]*?<summary aria-controls="accessibility-options">[\s\S]*?Toegankelijkheid[\s\S]*?<\/summary>/, page);
+    assert.match(html, /class="accessibility-menu-panel" id="accessibility-options"[^>]*role="group"/, page);
     assert.match(html, /class="accessibility-toggle"[^>]*aria-label="Grotere tekst instellen"/, page);
     assert.match(html, /class="contrast-toggle"[^>]*aria-label="Hoog contrast instellen"/, page);
     assert.match(html, /<script src="toegankelijkheid\.js"><\/script>/, page);
   }
+});
+
+test("the accessibility menu closes on outside click and Escape returns focus", () => {
+  const listeners = new Map();
+  const summary = { focused: false, focus() { this.focused = true; } };
+  const menu = {
+    open: true,
+    contains: (target) => target === menu,
+    querySelector: () => summary
+  };
+  const buttons = [".accessibility-toggle", ".contrast-toggle"].map(() => ({
+    setAttribute() {},
+    querySelector: () => ({ textContent: "" }),
+    addEventListener() {}
+  }));
+  const context = {
+    document: {
+      documentElement: { classList: { toggle() {} } },
+      querySelector: (selector) => selector === ".accessibility-menu" ? menu : buttons[selector === ".accessibility-toggle" ? 0 : 1],
+      addEventListener: (type, handler) => listeners.set(type, handler)
+    },
+    localStorage: { getItem: () => null, setItem() {} },
+    console: { error() {} }
+  };
+
+  vm.runInNewContext(preferenceScript, context);
+  listeners.get("pointerdown")({ target: {} });
+  assert.equal(menu.open, false);
+
+  menu.open = true;
+  listeners.get("keydown")({ key: "Escape" });
+  assert.equal(menu.open, false);
+  assert.equal(summary.focused, true);
 });
 
 test("all pages provide a keyboard skip link to a focusable main area", () => {
