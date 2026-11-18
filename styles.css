@@ -532,6 +532,8 @@ h2 span { color: #cf7d5f; }
   .auth-content { padding: 30px 25px 25px; }
   .profile-form-grid { grid-template-columns: 1fr; gap: 0; }
   .site-footer { display: block; line-height: 2; }
+  .site-footer > span { display: block; }
+  .site-footer > span + span { margin-top: 6px; }
   .notification-dialog { padding: 28px 20px 20px; }
   .notification-dialog-actions { align-items: flex-start; flex-direction: column; }
 }
