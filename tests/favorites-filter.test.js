@@ -6,6 +6,7 @@ const vm = require("node:vm");
 
 const pageSource = fs.readFileSync(path.join(__dirname, "..", "pagina.js"), "utf8");
 const instancesSource = fs.readFileSync(path.join(__dirname, "..", "plant-instances.js"), "utf8");
+const collectionSource = fs.readFileSync(path.join(__dirname, "..", "plantencollectie.js"), "utf8");
 
 async function loadPage(profiles, saved = ["one", "two"], accountState = null) {
   const elements = new Map();
@@ -21,10 +22,9 @@ async function loadPage(profiles, saved = ["one", "two"], accountState = null) {
     ["sproutly-plants", JSON.stringify(saved)],
     ["sproutly-profiles", JSON.stringify(profiles)]
   ]);
-  const plant = { name: "Monstera", category: "Binnenplant", scientific: "Monstera deliciosa", art: "art-monstera", light: "Licht", difficulty: "easy", image: "plant.jpg", imageSource: "bron" };
   const context = {
     window: {
-      SPROUTLY_PLANTS: [plant], SPROUTLY_DEFAULT_SAVED_PLANTS: [],
+      SPROUTLY_DEFAULT_SAVED_PLANTS: [],
       SproutlyAccount: {
         async getUser() { return accountState ? { id: "user" } : null; },
         async getState() { return accountState; }
@@ -34,6 +34,7 @@ async function loadPage(profiles, saved = ["one", "two"], accountState = null) {
     localStorage: { getItem: (key) => storage.get(key) || null, setItem: (key, value) => storage.set(key, value) },
     console, structuredClone, setTimeout, clearTimeout
   };
+  vm.runInNewContext(collectionSource, context);
   vm.runInNewContext(instancesSource, context);
   vm.runInNewContext(pageSource, context);
   await new Promise((resolve) => setImmediate(resolve));
@@ -57,6 +58,16 @@ test("filter selects favorite specimens and can be turned off", async () => {
   filter.checked = false;
   filter.handlers.change();
   assert.match(grid.innerHTML, /Buiten/);
+});
+
+test("saved plant cards use the shared design with a labelled remove action and care button", async () => {
+  const elements = await loadPage({ one: { species: "Monstera" } }, ["one"]);
+  const markup = elements.get("#saved-plants-grid").innerHTML;
+  assert.match(markup, /<article class="plant-card catalog-card">/);
+  assert.match(markup, /<button class="save-plant plant-card-action saved"[^>]*data-remove-plant="one" aria-label="Sluiten" aria-describedby="plant-card-action-description-one"><span aria-hidden="true">×<\/span><\/button><span class="sr-only" id="plant-card-action-description-one">Verwijdert Monstera uit Mijn planten\.<\/span>/);
+  assert.match(markup, /class="plant-tag">Binnenplant<\/span>/);
+  assert.match(markup, /class="plant-details-link"[^>]*>Bekijk verzorging <span aria-hidden="true">→<\/span><\/a>/);
+  assert.match(markup, /class="image-credit"[^>]*>Fotobron en licentie<\/a>/);
 });
 
 test("empty favorite filter offers a way back without showing an empty collection", async () => {

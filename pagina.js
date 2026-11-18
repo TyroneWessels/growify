@@ -110,20 +110,21 @@ function renderSavedPlants() {
   const visiblePlants = favoritesFilter?.checked ? plants.filter((plant) => plant.profile.favorite === true) : plants;
   emptyState.hidden = plants.length > 0;
   if (favoritesEmpty) favoritesEmpty.hidden = !favoritesFilter.checked || plants.length === 0 || visiblePlants.length > 0;
-  savedGrid.innerHTML = visiblePlants.map((plant) => `
-    <article class="plant-card catalog-card">
-      <button class="save-plant saved" type="button" data-remove-plant="${window.SproutlyPlants.escape(plant.instanceId)}" aria-label="Verwijder ${window.SproutlyPlants.escape(plant.displayName)} uit Mijn planten">Verwijderen</button>
-      <a class="plant-art ${plant.art}" href="${window.SproutlyPlants.url(plant.name, plant.instanceId)}" aria-label="Bekijk ${window.SproutlyPlants.escape(plant.displayName)}"><img class="plant-photo" src="${window.SproutlyPlants.escape(plant.profile.photo || plant.image)}" alt="${plant.name}" loading="lazy" decoding="async" /></a>
-      <span class="plant-tag">${plant.category}</span>
-      <h3><a href="${window.SproutlyPlants.url(plant.name, plant.instanceId)}">${window.SproutlyPlants.escape(plant.displayName)}</a></h3>
-      ${plant.profile.customName ? `<p class="catalog-card-meta">${window.SproutlyPlants.escape(plant.name)}</p>` : ""}
-      ${plant.profile.location ? `<p class="catalog-card-meta">${window.SproutlyPlants.escape(plant.profile.location)}</p>` : ""}
-      <p class="scientific-name">${plant.scientific}</p>
-      <p class="catalog-card-meta">${plant.light} · ${plant.difficulty === "easy" ? "Makkelijk" : "Gemiddeld"}</p>
-      <a class="plant-details-link" href="${window.SproutlyPlants.url(plant.name, plant.instanceId)}">Bekijk plant en verzorging</a>
-      <div class="plant-card-links"><a class="image-credit" href="${plant.imageSource}" target="_blank" rel="noreferrer">Fotobron en licentie</a></div>
-    </article>
-  `).join("");
+  savedGrid.innerHTML = visiblePlants.map((plant) => window.renderPlantCard(plant, {
+    href: window.SproutlyPlants.url(plant.name, plant.instanceId),
+    image: plant.profile.photo || plant.image,
+    displayName: plant.displayName,
+    secondaryName: plant.profile.customName ? plant.name : "",
+    profileDetails: [plant.profile.location],
+    action: {
+      attribute: "data-remove-plant",
+      value: plant.instanceId,
+      label: "Sluiten",
+      description: `Verwijdert ${plant.displayName} uit Mijn planten.`,
+      symbol: "×",
+      saved: true
+    }
+  })).join("");
   savedGrid.querySelectorAll(".plant-photo").forEach((image) => image.addEventListener("error", window.handlePlantImageError, { once: true }));
   savedGrid.querySelectorAll("[data-remove-plant]").forEach((button) => {
     button.addEventListener("click", async () => {

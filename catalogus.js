@@ -106,22 +106,13 @@ function renderCatalog() {
   catalogResultCount.textContent = `${sorted.length} ${sorted.length === 1 ? "plant" : "planten"} gevonden`;
   catalogEmpty.hidden = sorted.length > 0;
   updateNavCount();
-  catalogGrid.innerHTML = sorted.map((plant) => `
-    <article class="plant-card catalog-card">
-      <button class="save-plant" type="button" data-catalog-save="${plant.name}" aria-label="Voeg een ${plant.name} toe aan Mijn planten">
-        + Toevoegen
-      </button>
-      <a class="plant-art ${plant.art}" href="plant/?naam=${encodeURIComponent(plant.name)}" aria-label="Bekijk ${plant.name}">
-        <img class="plant-photo" src="${plant.image}" alt="${plant.name}" loading="lazy" decoding="async" />
-      </a>
-      <span class="plant-tag">${plant.category}</span>
-      <h3><a href="plant/?naam=${encodeURIComponent(plant.name)}">${plant.name}</a></h3>
-      <p class="scientific-name">${plant.scientific}</p>
-      <p class="catalog-card-meta">${plant.light} · ${plant.difficulty === "easy" ? "Makkelijk" : "Gemiddeld"}</p>
-      <a class="plant-details-link" href="plant/?naam=${encodeURIComponent(plant.name)}">Bekijk plant en verzorging</a>
-      <div class="plant-card-links"><a class="image-credit" href="${plant.imageSource}" target="_blank" rel="noreferrer">Fotobron en licentie</a></div>
-    </article>
-  `).join("");
+  catalogGrid.innerHTML = sorted.map((plant) => window.renderPlantCard(plant, {
+    action: {
+      attribute: "data-catalog-save",
+      value: plant.name,
+      label: `Voeg een ${plant.name} toe aan Mijn planten`
+    }
+  })).join("");
   catalogGrid.querySelectorAll(".plant-photo").forEach((image) => image.addEventListener("error", window.handlePlantImageError, { once: true }));
 }
 

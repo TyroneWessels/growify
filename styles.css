@@ -171,12 +171,15 @@ h2 span { color: #cf7d5f; }
 .filter-select select { height: 35px; padding: 0 25px 0 10px; border: 1px solid var(--line); border-radius: 18px; background: transparent; color: var(--muted); font-size: 10px; }
 .filter-select select:focus { outline: 2px solid rgba(47,114,89,.35); outline-offset: 2px; }
 .plant-grid { display: grid; grid-template-columns: repeat(4, 1fr); gap: 15px; }
-.plant-card { position: relative; overflow: hidden; min-height: 262px; padding: 17px; border-radius: 9px; background: var(--paper); }
-.plant-card:hover { transform: translateY(-3px); box-shadow: 0 12px 24px rgba(50, 77, 61, .09); transition: .2s ease; }
-.plant-art { position: relative; display: flex; align-items: end; justify-content: center; width: calc(100% + 34px); height: 148px; margin: -17px -17px 16px; padding: 0; overflow: hidden; border: 0; }
+.plant-card { position: relative; display: flex; min-width: 0; flex-direction: column; padding: 16px; border: 1px solid var(--line); border-radius: 16px; background: var(--paper); box-shadow: 0 5px 16px rgba(50, 77, 61, .07); transition: transform .2s ease, box-shadow .2s ease; }
+.plant-card:hover { transform: translateY(-3px); box-shadow: 0 12px 24px rgba(50, 77, 61, .12); }
+.plant-art { position: relative; display: grid; place-items: center; width: calc(100% + 32px); aspect-ratio: 4 / 3; margin: -16px -16px 12px; padding: 0; overflow: hidden; border: 0; border-radius: 16px 16px 0 0; background: var(--light-green); }
+.plant-art:active { opacity: .9; }
 .plant-photo { display: block; width: 100%; height: 100%; object-fit: cover; transition: transform .3s ease; }
 .plant-card:hover .plant-photo { transform: scale(1.05); }
-.plant-art::after { content: ""; position: absolute; bottom: -30px; width: 150px; height: 66px; border-radius: 50%; background: rgba(255,255,255,.28); }
+.plant-art-placeholder { background: var(--light-green); }
+.plant-art-placeholder-icon { display: grid; width: 52px; height: 52px; place-items: center; border-radius: 50%; background: rgba(255,255,255,.6); color: var(--green); }
+.plant-art-placeholder-icon svg { width: 30px; height: 30px; fill: none; stroke: currentColor; stroke-linecap: round; stroke-linejoin: round; stroke-width: 1.8; }
 .art-monstera { background: #dcebd7; }
 .art-herb { background: #f7e6a8; }
 .art-lavender { background: #e8dfeb; }
@@ -186,11 +189,20 @@ h2 span { color: #cf7d5f; }
 .art-herb .plant-shape { width: 20px; height: 112px; background: #5b9664; border-radius: 50%; box-shadow: -28px 20px 0 -5px #78aa6e, 28px 5px 0 -3px #4e8c5a, 11px 42px 0 -4px #72a267; transform: rotate(3deg); }
 .art-lavender .plant-shape { width: 8px; height: 100px; background: #759d6a; border-radius: 50%; box-shadow: -20px 12px 0 -1px #8e6e9a, -13px 0 0 -1px #a37dac, 14px 5px 0 -1px #9370a3, 22px 22px 0 -1px #a37dac; }
 .art-snake .plant-shape { width: 23px; height: 118px; background: #749b5f; border-radius: 80% 20% 0 0; box-shadow: -19px 8px 0 -2px #4e8456, 20px 17px 0 -3px #8aa66d; }
-.plant-card h3 { margin: 0 0 4px; font-size: 15px; }
-.plant-card .scientific-name { margin: 0; color: var(--muted); font-family: var(--serif); font-size: 12px; font-style: italic; }
-.plant-tag { position: absolute; top: 13px; left: 13px; padding: 5px 8px; border-radius: 12px; background: rgba(255,255,255,.7); color: var(--green); font-size: 9px; font-weight: 700; }
-.save-plant { position: absolute; top: 11px; right: 12px; z-index: 2; width: 27px; height: 27px; border: 0; border-radius: 50%; background: rgba(255,255,255,.78); color: var(--green); font-size: 17px; }
+.plant-card .plant-tag { display: inline-flex; max-width: 100%; align-self: flex-start; margin: 0 0 8px; padding: 5px 9px; overflow: hidden; border-radius: 999px; background: var(--light-green); color: var(--green); font-size: 13px; font-weight: 700; text-overflow: ellipsis; white-space: nowrap; }
+.plant-card h3 { display: -webkit-box; margin: 0; overflow: hidden; font-size: 21px; font-weight: 700; line-height: 1.25; overflow-wrap: anywhere; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.plant-card h3 a:hover { color: var(--green); text-decoration: underline; text-underline-offset: 3px; }
+.plant-card h3 a:active { color: var(--ink); }
+.plant-card .scientific-name { display: -webkit-box; margin: 4px 0 0; overflow: hidden; color: var(--muted); font-family: var(--serif); font-size: 14px; font-style: italic; line-height: 1.4; overflow-wrap: anywhere; -webkit-box-orient: vertical; -webkit-line-clamp: 2; }
+.plant-card-features { display: flex; flex-wrap: wrap; gap: 8px; margin-top: 12px; }
+.plant-feature { display: inline-flex; min-height: 28px; align-items: center; padding: 4px 9px; border: 1px solid var(--line); border-radius: 999px; background: var(--cream); color: var(--muted); font-size: 12px; line-height: 1.25; }
+.save-plant.plant-card-action { position: absolute; top: 12px; right: 12px; z-index: 2; display: grid; width: 44px; min-width: 44px; height: 44px; min-height: 44px; place-items: center; padding: 5px; border: 0; border-radius: 50%; background: rgba(255,255,255,.88); color: var(--green); box-shadow: 0 2px 8px rgba(23,60,50,.18); font-size: 0; }
+.plant-card-action span { display: grid; width: 34px; height: 34px; place-items: center; border-radius: 50%; background: #fff; font-size: 20px; font-weight: 300; line-height: 1; }
+.plant-card-action.saved span { background: transparent; color: var(--green); }
+.plant-card-action:hover { background: #fff; box-shadow: 0 3px 12px rgba(23,60,50,.25); }
+.plant-card-action:active { transform: scale(.96); }
 .save-plant.saved { background: var(--green); color: #fff; }
+.save-plant.plant-card-action.saved { background: rgba(255,255,255,.88); color: var(--green); }
 .empty-state { padding: 30px; border: 1px dashed #b6c8bc; border-radius: 9px; text-align: center; color: var(--muted); }
 .catalog-intro { max-width: 700px; padding: 70px 0 42px; }
 .page-intro { max-width: 700px; padding: 70px 0 42px; }
@@ -249,19 +261,23 @@ h2 span { color: #cf7d5f; }
 .catalog-search input { width: 100%; border: 0; outline: 0; background: transparent; color: var(--ink); }
 .catalog-filters { display: flex; flex-wrap: wrap; align-items: center; gap: 10px; margin-top: 15px; }
 .catalog-result-count { margin: 15px 0 0; color: var(--muted); font-size: 11px; }
-.catalog-card { min-height: 310px; padding-bottom: 19px; }
-.catalog-card .save-plant { min-height: 42px; width: auto; height: auto; padding: 8px 12px; border-radius: 21px; font-size: 12px; font-weight: 700; }
+.catalog-card { min-width: 0; }
 .catalog-card .plant-care-details { margin-top: 12px; color: var(--muted); font-size: 12px; line-height: 1.55; }
 .catalog-card .plant-care-details summary { display: flex; align-items: center; min-height: 44px; color: var(--green); cursor: pointer; font-weight: 700; }
 .catalog-card .plant-care-details p { margin: 7px 0; }
-.catalog-card-meta { margin: 9px 0 0; color: var(--muted); font-size: 12px; }
-.plant-card-links { margin-top: 10px; }
+.catalog-card-meta { margin: 8px 0 0; color: var(--muted); font-size: 13px; overflow-wrap: anywhere; }
+.plant-card-footer { display: flex; flex-direction: column; margin-top: auto; }
 .calendar-summary { margin: 8px 0 0; color: var(--muted); font-size: 13px; }
 .calendar-guidance { margin: 0 0 16px; color: var(--muted); font-size: 14px; line-height: 1.6; }
 .reminder-status { grid-column: 1 / -1; margin: -30px 0 0; color: var(--ink); font-size: 14px; line-height: 1.5; }
-.catalog-card-meta { margin: 8px 0 0; color: var(--muted); font-size: 10px; }
-.plant-card-links { display: flex; flex-direction: column; align-items: flex-start; gap: 8px; margin-top: 10px; }
-.plant-details-link { display: inline-flex; align-items: center; min-height: 44px; margin-top: 8px; color: var(--green); font-size: 13px; font-weight: 700; text-decoration: underline; text-underline-offset: 3px; }
+.plant-card-links { display: flex; min-height: 36px; flex-direction: column; align-items: flex-start; gap: 8px; margin-top: 10px; padding-top: 9px; border-top: 1px solid var(--line); }
+.plant-card-links.is-empty { border-top: 0; }
+.plant-details-link { display: flex; width: 100%; min-height: 48px; align-items: center; justify-content: center; gap: 8px; margin-top: 12px; padding: 10px 14px; border: 1px solid var(--green); border-radius: 10px; background: var(--green); color: #fff; font-size: 14px; font-weight: 700; text-align: center; transition: background-color .15s ease, transform .15s ease; }
+.plant-details-link:hover { background: var(--ink); }
+.plant-details-link:active { transform: scale(.98); }
+.plant-card-links .image-credit { color: var(--muted); font-size: 13px; text-underline-offset: 3px; }
+.plant-card-links .image-credit:hover { color: var(--green); text-decoration: underline; }
+.plant-card-links .image-credit:active { color: var(--ink); }
 .plant-back { display: inline-block; margin: 30px 0; color: var(--green); font-weight: 700; }
 .plant-detail-intro { display: grid; grid-template-columns: minmax(0, 1fr) minmax(0, 1fr); align-items: center; gap: 45px; }
 .plant-detail-intro h1 { font-size: clamp(42px, 5vw, 65px); overflow-wrap: anywhere; }
@@ -581,7 +597,7 @@ h1 em, h2 em, h2 span { color: #a44f35; }
 }
 .task-card { background-image: radial-gradient(circle at 100% 0, rgba(255,255,255,.62), transparent 42%); }
 .task-icon, .location-icon { width: 42px; height: 42px; }
-.task-card h3, .location-card-copy strong, .plant-card h3 { font-size: 17px; }
+.task-card h3, .location-card-copy strong { font-size: 17px; }
 .task-card p, .location-card-copy small { font-size: 15px; }
 .task-check { width: 36px; height: 36px; }
 .location-card { padding: 18px; background: linear-gradient(110deg, #fffdf8, #f1f7e9); }
@@ -591,14 +607,8 @@ h1 em, h2 em, h2 span { color: #a44f35; }
 .catalog-search input, .search-form input { min-height: 44px; font-size: 16px; }
 .catalog-search input:focus-visible, .search-form input:focus-visible { outline: 3px solid #a44f35; outline-offset: 2px; }
 .catalog-result-count, .catalog-card-meta, .catalog-card .plant-care-details { font-size: 14px; }
-.plant-card { padding: 17px; }
 .plant-card:hover { box-shadow: 0 12px 26px rgba(37, 75, 58, .14); }
-.plant-art { border-radius: 17px 17px 40px 0; }
-.plant-art::after { display: none; }
-.plant-tag { font-size: 13px; }
 .save-plant { width: 44px; height: 44px; }
-.catalog-card .save-plant { font-size: 14px; }
-.plant-card .scientific-name, .scientific-name { font-size: 15px; }
 .my-plants-section { background: radial-gradient(circle at 5% 90%, #d7e9cb, transparent 32%), #e9f1e2; }
 .my-plants-copy > p:not(.eyebrow), .collection-item > span:nth-child(2), .collection-empty { max-width: 360px; font-size: 16px; }
 .collection-header, .today-card-header, .week-card-header { font-size: 17px; }
@@ -752,8 +762,7 @@ body { font-size: 17px; line-height: 1.6; }
 .main-nav, .profile-name, .text-button, .eyebrow, .quick-searches,
 .quick-searches button, .task-card h3, .task-card p,
 .location-card-copy strong, .location-card-copy small, .filter-tab,
-.filter-select select, .plant-card h3, .plant-card .scientific-name,
-.plant-tag, .save-plant, .calendar-event, .calendar-event small,
+.filter-select select, .plant-tag, .save-plant, .calendar-event, .calendar-event small,
 .catalog-result-count, .catalog-card .plant-care-details,
 .catalog-card-meta, .calendar-summary, .calendar-guidance,
 .reminder-status, .site-footer, .newsletter-card > p, .auth-intro,
@@ -849,12 +858,6 @@ button:disabled { cursor: not-allowed; }
   .catalog-intro > p:not(.eyebrow), .page-intro > p:not(.eyebrow) { margin-top: 14px; }
   .section-block, .popular-section { padding-top: 42px; }
   .plant-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
-  .plant-card, .catalog-card { min-height: 0; padding: 12px; }
-  .plant-art {
-    width: calc(100% + 24px);
-    height: 105px;
-    margin: -12px -12px 12px;
-  }
   .task-card { min-height: 0; }
   .my-plants-section { margin-top: 52px; padding-top: 42px; padding-bottom: 42px; }
   .care-plan-section, .calendar-section { padding-top: 48px; }
@@ -868,7 +871,15 @@ button:disabled { cursor: not-allowed; }
   .hero-copy { width: 100%; }
   .hero-art { width: min(125px, 100%); align-self: center; }
   .main-nav a:last-child { grid-column: 1 / -1; }
-  .plant-art { height: 130px; }
+}
+
+@media (max-width: 500px) {
+  .catalog-page .catalog-grid { grid-template-columns: minmax(0, 1fr); gap: 14px; }
+  .sub-page #saved-plants-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 10px; }
+}
+
+@media (max-width: 340px) {
+  .sub-page #saved-plants-grid { grid-template-columns: minmax(0, 1fr); }
 }
 
 @media (max-width: 340px) {
@@ -1058,6 +1069,61 @@ html.high-contrast :is(a, button, input, select, textarea, summary):focus-visibl
 @media (max-width: 380px) {
   .notification-dialog { width: calc(100% - 20px); max-height: 92vh; padding: 26px 16px 18px; }
   .notification-option.push-reminder-settings { align-items: flex-start; }
+}
+
+@media (max-width: 590px) {
+  body { padding-bottom: calc(72px + env(safe-area-inset-bottom)); }
+
+  .main-nav {
+    position: fixed;
+    z-index: 30;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    display: grid;
+    grid-template-columns: repeat(4, minmax(0, 1fr));
+    gap: 0;
+    width: 100%;
+    margin: 0;
+    padding: 5px 6px calc(5px + env(safe-area-inset-bottom));
+    border-top: 1px solid var(--line);
+    background: var(--paper);
+    box-shadow: 0 -5px 18px rgba(37, 75, 58, .1);
+  }
+
+  .main-nav a {
+    display: flex;
+    min-width: 0;
+    min-height: 54px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 2px;
+    padding: 4px 2px;
+    border-radius: 10px;
+    font-size: 9px;
+    line-height: 1.15;
+    text-align: center;
+  }
+
+  .main-nav a:last-child { grid-column: auto; }
+  .main-nav a::before { font-size: 18px; line-height: 1; }
+  .main-nav a:nth-child(1)::before { content: "⌂"; }
+  .main-nav a:nth-child(2)::before { content: "♧"; }
+  .main-nav a:nth-child(3)::before { content: "♡"; }
+  .main-nav a:nth-child(4)::before { content: "▦"; }
+  .main-nav a.active { background: var(--light-green); color: var(--green); font-weight: 700; }
+  .main-nav a.active::after { display: none; }
+  .main-nav .nav-count { position: absolute; top: 0; right: 6px; min-width: 16px; padding: 2px 4px; border-radius: 10px; background: var(--green); color: #fff; font-size: 9px; }
+
+  .catalog-controls { margin-bottom: 20px; padding: 12px; }
+  .catalog-filters { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 8px; margin-top: 10px; }
+  .catalog-filters .filter-tabs { grid-column: 1 / -1; flex-wrap: nowrap; gap: 6px; overflow-x: auto; scrollbar-width: none; }
+  .catalog-filters .filter-tabs::-webkit-scrollbar { display: none; }
+  .catalog-filters .filter-tab { flex: 0 0 auto; padding: 8px 11px; }
+  .catalog-filters .filter-select { min-width: 0; }
+  .catalog-filters .filter-select select { width: 100%; min-width: 0; padding-right: 22px; font-size: 12px; }
+  .catalog-result-count { margin-top: 10px; }
 }
 @media (max-width: 400px) {
   .recovery-accessibility-tools { width: calc(100% - 32px); }

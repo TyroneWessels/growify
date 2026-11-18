@@ -7,6 +7,7 @@ const vm = require("node:vm");
 const root = path.join(__dirname, "..");
 const pageSource = fs.readFileSync(path.join(root, "pagina.js"), "utf8");
 const instancesSource = fs.readFileSync(path.join(root, "plant-instances.js"), "utf8");
+const collectionSource = fs.readFileSync(path.join(root, "plantencollectie.js"), "utf8");
 
 function createElement() {
   return {
@@ -52,14 +53,8 @@ async function loadPage(initialState) {
     ["sproutly-tasks", JSON.stringify(initialState.completedTasks)],
     ["sproutly-care-overrides", JSON.stringify(initialState.careOverrides)]
   ]);
-  const plant = {
-    name: "Monstera", category: "Binnenplant", scientific: "Monstera deliciosa",
-    art: "art-monstera", light: "Licht", difficulty: "easy", image: "plant.jpg",
-    imageSource: "bron"
-  };
   const context = {
     window: {
-      SPROUTLY_PLANTS: [plant],
       SPROUTLY_DEFAULT_SAVED_PLANTS: [],
       confirm: () => true,
       SproutlyAccount: { async getUser() { return null; } }
@@ -80,6 +75,7 @@ async function loadPage(initialState) {
     setTimeout: () => 1,
     clearTimeout() {}
   };
+  vm.runInNewContext(collectionSource, context);
   vm.runInNewContext(instancesSource, context);
   vm.runInNewContext(pageSource, context);
   await new Promise((resolve) => setImmediate(resolve));

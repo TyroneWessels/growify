@@ -158,18 +158,78 @@ const soilCheckIntervals = {
 
 window.SPROUTLY_PLANTS.forEach((plant) => {
   const photo = speciesPhotos[plant.scientific];
-  if (!photo) throw new Error(`Geen foto ingesteld voor ${plant.scientific}`);
-  const [, fileName] = photo;
-  const slug = plant.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
-  const extension = ["Aloe barbadensis miller", "Nephrolepis exaltata"].includes(plant.scientific) ? "png" : "jpg";
-  const imageSlug = plant.scientific === "Beaucarnea recurvata" ? "olifantspoot-kamerplant" : slug;
-  plant.image = `assets/plants/${imageSlug}.${extension}`;
-  plant.imageSource = `https://commons.wikimedia.org/wiki/File:${encodeURIComponent(decodeURIComponent(fileName)).replace(/%20/g, "_")}`;
+  if (photo) {
+    const [, fileName] = photo;
+    const slug = plant.name.normalize("NFD").replace(/[\u0300-\u036f]/g, "").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, "");
+    const extension = ["Aloe barbadensis miller", "Nephrolepis exaltata"].includes(plant.scientific) ? "png" : "jpg";
+    const imageSlug = plant.scientific === "Beaucarnea recurvata" ? "olifantspoot-kamerplant" : slug;
+    plant.image = `assets/plants/${imageSlug}.${extension}`;
+    plant.imageSource = `https://commons.wikimedia.org/wiki/File:${encodeURIComponent(decodeURIComponent(fileName)).replace(/%20/g, "_")}`;
+  }
   plant.soilCheckDays = soilCheckIntervals[plant.scientific] || 7;
 });
 
+function escapePlantCardHtml(value) {
+  return String(value).replace(/[&<>"']/g, (character) => ({
+    "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;"
+  }[character]));
+}
+
+window.renderPlantCard = (plant, options = {}) => {
+  const href = escapePlantCardHtml(options.href || `plant/?naam=${encodeURIComponent(plant.name)}`);
+  const displayName = escapePlantCardHtml(options.displayName || plant.name);
+  const scientificName = plant.scientific ? `<p class="scientific-name">${escapePlantCardHtml(plant.scientific)}</p>` : "";
+  const profileDetails = (options.profileDetails || [])
+    .filter(Boolean)
+    .map((detail) => `<p class="catalog-card-meta">${escapePlantCardHtml(detail)}</p>`)
+    .join("");
+  const difficultyLabels = { easy: "Makkelijk", medium: "Gemiddeld", hard: "Uitdagend" };
+  const features = [
+    plant.light && `<span class="plant-feature">${escapePlantCardHtml(plant.light)}</span>`,
+    plant.difficulty && `<span class="plant-feature">${escapePlantCardHtml(difficultyLabels[plant.difficulty] || plant.difficulty)}</span>`
+  ].filter(Boolean).join("");
+  const image = options.image || plant.image;
+  const imageMarkup = image
+    ? `<img class="plant-photo" src="${escapePlantCardHtml(image)}" alt="${escapePlantCardHtml(plant.name)}" loading="lazy" decoding="async" />`
+    : `<span class="plant-art-placeholder-icon" aria-hidden="true"><svg viewBox="0 0 32 32" focusable="false"><path d="M16 28V15m0 7c-7 0-11-4-11-10 7 0 11 4 11 10Zm0-4c0-7 4-11 11-11 0 7-4 11-11 11Z"/></svg></span>`;
+  const categoryMarkup = plant.category ? `<span class="plant-tag">${escapePlantCardHtml(plant.category)}</span>` : "";
+  const action = options.action;
+  const actionDescriptionId = action?.description ? `plant-card-action-description-${escapePlantCardHtml(action.value)}` : "";
+  const actionMarkup = action
+    ? `<button class="save-plant plant-card-action${action.saved ? " saved" : ""}" type="button" ${escapePlantCardHtml(action.attribute)}="${escapePlantCardHtml(action.value)}" aria-label="${escapePlantCardHtml(action.label)}"${actionDescriptionId ? ` aria-describedby="${actionDescriptionId}"` : ""}><span aria-hidden="true">${escapePlantCardHtml(action.symbol || "+")}</span></button>${actionDescriptionId ? `<span class="sr-only" id="${actionDescriptionId}">${escapePlantCardHtml(action.description)}</span>` : ""}`
+    : "";
+  const imageSource = plant.imageSource && String(plant.imageSource).trim();
+  const sourceMarkup = imageSource
+    ? `<div class="plant-card-links"><a class="image-credit" href="${escapePlantCardHtml(imageSource)}" target="_blank" rel="noreferrer">Fotobron en licentie</a></div>`
+    : `<div class="plant-card-links is-empty" aria-hidden="true"></div>`;
+
+  return `
+    <article class="plant-card catalog-card">
+      <a class="plant-art ${escapePlantCardHtml(plant.art || "")}${image ? "" : " plant-art-placeholder"}" href="${href}" aria-label="Bekijk ${displayName}">${imageMarkup}</a>
+      ${actionMarkup}
+      ${categoryMarkup}
+      <h3><a href="${href}">${displayName}</a></h3>
+      ${options.secondaryName ? `<p class="catalog-card-meta">${escapePlantCardHtml(options.secondaryName)}</p>` : ""}
+      ${profileDetails}
+      ${scientificName}
+      ${features ? `<div class="plant-card-features">${features}</div>` : ""}
+      <div class="plant-card-footer">
+        <a class="plant-details-link" href="${href}">Bekijk verzorging <span aria-hidden="true">→</span></a>
+        ${sourceMarkup}
+      </div>
+    </article>
+  `;
+};
+
 window.handlePlantImageError = (event) => {
   const image = event.currentTarget;
+  const cardImage = image.closest(".plant-art");
+  if (cardImage) {
+    image.remove();
+    cardImage.classList.add("plant-art-placeholder");
+    cardImage.insertAdjacentHTML("beforeend", `<span class="plant-art-placeholder-icon" aria-hidden="true"><svg viewBox="0 0 32 32" focusable="false"><path d="M16 28V15m0 7c-7 0-11-4-11-10 7 0 11 4 11 10Zm0-4c0-7 4-11 11-11 0 7-4 11-11 11Z"/></svg></span>`);
+    return;
+  }
   image.onerror = null;
   image.removeAttribute("srcset");
   image.src = "data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='800' height='600' viewBox='0 0 800 600'%3E%3Crect width='800' height='600' fill='%23dcebd7'/%3E%3Ctext x='400' y='305' text-anchor='middle' fill='%232f7259' font-family='Arial' font-size='28'%3EFoto tijdelijk niet beschikbaar%3C/text%3E%3C/svg%3E";
