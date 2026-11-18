@@ -87,6 +87,13 @@ test("sign-in links on secondary pages open the home page account modal", () => 
   }
 });
 
+test("the home page can initialize account controls without optional reminder controls", () => {
+  const home = fs.readFileSync(path.join(__dirname, "..", "index.html"), "utf8");
+  const script = fs.readFileSync(path.join(__dirname, "..", "script.js"), "utf8");
+  assert.doesNotMatch(home, /id="reminder-button"/);
+  assert.match(script, /if \(reminderButton && reminderStatus\) reminderButton\.addEventListener/);
+});
+
 test("the collection page has one shared sign-in control in the header", () => {
   const html = fs.readFileSync(path.join(__dirname, "..", "mijn-planten.html"), "utf8");
   assert.match(html, /class="profile-button"[^>]*>[\s\S]*class="profile-name">Inloggen<\/span>/);

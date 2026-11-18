@@ -1065,27 +1065,28 @@ document.querySelector("#add-plant-button").addEventListener("click", () => {
   showToast("Zoek een plant om deze aan je collectie toe te voegen");
 });
 
-document.querySelector("#reminder-button").addEventListener("click", async () => {
-  const status = document.querySelector("#reminder-status");
+const reminderButton = document.querySelector("#reminder-button");
+const reminderStatus = document.querySelector("#reminder-status");
+if (reminderButton && reminderStatus) reminderButton.addEventListener("click", async () => {
   if (!("Notification" in window) || typeof Notification.requestPermission !== "function") {
     showToast("Meldingen worden niet ondersteund door deze browser");
-    status.textContent = "Deze browser ondersteunt geen meldingen. Je kunt je taken altijd in de kalender bekijken.";
+    reminderStatus.textContent = "Deze browser ondersteunt geen meldingen. Je kunt je taken altijd in de kalender bekijken.";
     return;
   }
   try {
     const permission = Notification.permission === "default" ? await Notification.requestPermission() : Notification.permission;
     if (permission !== "granted") {
       showToast("Meldingen zijn niet ingeschakeld");
-      status.textContent = "Meldingen zijn niet toegestaan. Je kunt verzorgingsmomenten altijd in de kalender bekijken.";
+      reminderStatus.textContent = "Meldingen zijn niet toegestaan. Je kunt verzorgingsmomenten altijd in de kalender bekijken.";
       return;
     }
     const count = window.SproutlyReminders.notify(getCalendarEvents());
-    status.textContent = "Verzorgingsmeldingen staan aan. Je krijgt een melding op dagen met taken zolang de homepage, Mijn planten of de kalender open is.";
+    reminderStatus.textContent = "Verzorgingsmeldingen staan aan. Je krijgt een melding op dagen met taken zolang de homepage, Mijn planten of de kalender open is.";
     showToast(count ? `Melding verstuurd voor ${count} verzorgingsmomenten` : "Verzorgingsmeldingen staan aan");
     startCareReminderChecks();
   } catch (error) {
     console.error("Verzorgingsmeldingen konden niet worden ingesteld:", error);
-    status.textContent = "De herinnering kon niet worden ingesteld. Je kunt de kalender wel blijven gebruiken.";
+    reminderStatus.textContent = "De herinnering kon niet worden ingesteld. Je kunt de kalender wel blijven gebruiken.";
     showToast("De herinnering kon niet worden ingesteld");
   }
 });
@@ -1098,7 +1099,8 @@ function startCareReminderChecks() {
     (count) => showToast(`Melding verstuurd voor ${count} verzorgingsmomenten`),
     (error) => {
       console.error("Verzorgingsmelding kon niet worden verstuurd:", error);
-      document.querySelector("#reminder-status").textContent = "Een verzorgingsmelding kon niet worden verstuurd. Je kunt de taken in de kalender bekijken.";
+      const status = document.querySelector("#reminder-status");
+      if (status) status.textContent = "Een verzorgingsmelding kon niet worden verstuurd. Je kunt de taken in de kalender bekijken.";
     }
   );
 }
