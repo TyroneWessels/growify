@@ -155,7 +155,7 @@ h2 span { color: #cf7d5f; }
 .task-check:hover, .task-check.complete { border-color: var(--green); background: var(--green); color: #fff; }
 .location-card { display: flex; align-items: center; justify-content: space-between; gap: 20px; margin-top: 15px; padding: 14px 17px; border: 1px solid var(--line); border-radius: 9px; background: var(--paper); }
 .location-card-copy { display: flex; align-items: center; gap: 10px; }
-.location-card-copy > span:last-child { display: grid; gap: 3px; }
+.location-card-copy > span:nth-child(2) { display: grid; gap: 3px; }
 .location-card-copy strong { font-size: 11px; }
 .location-card-copy small { color: var(--muted); font-size: 10px; }
 .location-icon { display: grid; place-items: center; width: 30px; height: 30px; border-radius: 50%; background: var(--light-green); color: var(--green); font-size: 19px; }
