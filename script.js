@@ -173,18 +173,31 @@ const authPassword = document.querySelector("#auth-password");
 const logoutButton = document.querySelector("#logout-button");
 const navCount = document.querySelector("#nav-count");
 const accountDataActions = document.querySelector("#account-data-actions");
+let authModalOpener = null;
+let plantModalOpener = null;
+
+function restoreModalFocus(opener) {
+  if (!opener || opener === document.body || !opener.isConnected || opener.closest("[hidden]")) return;
+  opener.focus();
+}
 const exportDataButton = document.querySelector("#export-data-button");
 const importDataButton = document.querySelector("#import-data-button");
 const importDataFile = document.querySelector("#import-data-file");
 const deleteAccountButton = document.querySelector("#delete-account-button");
 const clearLocalDataButton = document.querySelector("#clear-local-data-button");
-const notificationButton = document.querySelector(".notification-button");
 const collectionMoreButton = document.querySelector(".more-button");
 let activeFilter = "all";
 let gbifRequestNumber = 0;
 let activeHemisphere = "north";
 let calendarMonth = new Date(new Date().getFullYear(), new Date().getMonth(), 1);
 let selectedCalendarDate = new Date();
+const compactViewport = window.matchMedia("(max-width: 590px)");
+const responsiveDisclosures = ["#location-advice", "#week-overview", "#calendar-view"]
+  .map((selector) => document.querySelector(selector))
+  .filter(Boolean);
+responsiveDisclosures.forEach((disclosure) => {
+  disclosure.open = !compactViewport.matches;
+});
 const storedPlants = localStorage.getItem("sproutly-plants");
 let savedPlants = new Set(storedPlants ? JSON.parse(storedPlants) : window.SPROUTLY_DEFAULT_SAVED_PLANTS);
 if (!storedPlants) localStorage.setItem("sproutly-plants", JSON.stringify([...savedPlants]));
@@ -332,7 +345,6 @@ async function syncStateToServer() {
     });
 
 document.querySelector("#current-year").textContent = String(new Date().getFullYear());
-notificationButton.addEventListener("click", () => document.querySelector("#reminder-button").click());
 collectionMoreButton.addEventListener("click", () => {
   document.querySelector("#my-plants").scrollIntoView({ behavior: "smooth", block: "start" });
   showToast("Je collectie staat hieronder");
@@ -374,6 +386,7 @@ function setAuthMode(mode) {
 }
 
 function openAuthModal() {
+  if (authModal.hidden) authModalOpener = document.activeElement;
   setAuthMode(currentUser ? "login" : authMode);
   if (!backendAvailable && !currentUser) {
     authStatus.textContent = "De accountverbinding is niet beschikbaar. Controleer je internetverbinding.";
@@ -386,6 +399,8 @@ function closeAuthModal() {
   authModal.hidden = true;
   authForm.reset();
   authStatus.textContent = "";
+  restoreModalFocus(authModalOpener);
+  authModalOpener = null;
 }
 
 async function initializeSession() {
@@ -562,6 +577,9 @@ nextMonthButton.addEventListener("click", () => {
 
 function renderPlants(query = "") {
   const normalizedQuery = query.trim().toLowerCase();
+  const hasActiveFilters = normalizedQuery || activeFilter !== "all"
+    || lightFilter.value !== "all" || difficultyFilter.value !== "all" || sortFilter.value !== "relevance";
+  document.querySelector(".popular-section").classList.toggle("show-all-plants", Boolean(hasActiveFilters));
   const visiblePlants = plants.filter((plant) => {
     const matchesFilter = activeFilter === "all" || plant.filter === activeFilter;
     const searchableText = `${plant.name} ${plant.aliases.join(" ")} ${plant.scientific} ${plant.category} ${plant.type}`.toLowerCase();
@@ -747,6 +765,7 @@ function renderCarePlan() {
       selectedCalendarDate = parseDateKey(button.dataset.weekDate);
       calendarMonth = new Date(selectedCalendarDate.getFullYear(), selectedCalendarDate.getMonth(), 1);
       renderCalendar();
+      document.querySelector("#calendar-view").open = true;
       document.querySelector("#calendar-view").scrollIntoView({ behavior: "smooth", block: "start" });
     });
   });
@@ -878,6 +897,8 @@ function showToast(message) {
 }
 
 function openPlant(plant) {
+  if (!plant) return;
+  plantModalOpener = document.activeElement;
   const matches = [...savedPlants].filter((id) => window.SproutlyPlants.species(id, plantProfiles) === plant.name);
   activePlantName = matches.length === 1 ? matches[0] : "";
   const profile = plantProfiles[activePlantName] || {};
@@ -969,8 +990,14 @@ plantGrid.addEventListener("click", (event) => {
   if (plantButton) openPlant(plants.find((plant) => plant.name === plantButton.dataset.plant));
 });
 
-document.querySelector("#modal-close").addEventListener("click", () => { modal.hidden = true; });
-modal.addEventListener("click", (event) => { if (event.target === modal) modal.hidden = true; });
+function closePlantModal() {
+  modal.hidden = true;
+  restoreModalFocus(plantModalOpener);
+  plantModalOpener = null;
+}
+
+document.querySelector("#modal-close").addEventListener("click", closePlantModal);
+modal.addEventListener("click", (event) => { if (event.target === modal) closePlantModal(); });
 
 document.querySelector("#modal-add").addEventListener("click", () => {
   const name = document.querySelector("#modal-title").textContent;
@@ -1142,8 +1169,9 @@ logoutButton.addEventListener("click", async () => {
 });
 
 document.addEventListener("keydown", (event) => {
-  if (event.key === "Escape" && !authModal.hidden) closeAuthModal();
-  if (event.key === "Escape" && !modal.hidden) modal.hidden = true;
+  if (event.key !== "Escape") return;
+  if (!authModal.hidden) closeAuthModal();
+  else if (!modal.hidden) closePlantModal();
 });
 
 function trapModalFocus(event, activeModal) {

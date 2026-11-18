@@ -228,6 +228,8 @@ if (calendarGrid) {
   const monthNames = ["januari", "februari", "maart", "april", "mei", "juni", "juli", "augustus", "september", "oktober", "november", "december"];
   const dayNames = ["zondag", "maandag", "dinsdag", "woensdag", "donderdag", "vrijdag", "zaterdag"];
   const shortDayNames = ["Zo", "Ma", "Di", "Wo", "Do", "Vr", "Za"];
+  const notificationList = document.querySelector("#notification-list");
+  const notificationSummary = document.querySelector("#notification-summary");
 
   function dateKey(date) {
     const month = String(date.getMonth() + 1).padStart(2, "0");
@@ -289,10 +291,53 @@ if (calendarGrid) {
     });
   }
 
+  function renderNotifications(events) {
+    if (!notificationList || !notificationSummary) return;
+    const today = new Date();
+    const todayKey = dateKey(today);
+    const lastDayKey = dateKey(window.SproutlyCare.addDays(today, 7));
+    const upcoming = events
+      .filter((event) => event.date >= todayKey && event.date <= lastDayKey)
+      .sort((first, second) => first.date.localeCompare(second.date) || first.plantName.localeCompare(second.plantName, "nl"));
+
+    notificationSummary.textContent = `${upcoming.length} ${upcoming.length === 1 ? "verzorgingsmoment" : "verzorgingsmomenten"} in de komende 7 dagen`;
+    if (!upcoming.length) {
+      notificationList.innerHTML = `<li class="notification-empty">${savedNames.size
+        ? "Geen verzorgingsmomenten gepland voor de komende 7 dagen."
+        : "Bewaar een plant om verzorgingsmeldingen te zien."}</li>`;
+      return;
+    }
+
+    notificationList.innerHTML = upcoming.map((event) => {
+      const eventDate = window.SproutlyCare.parseDate(event.date);
+      const daysUntil = Math.round((eventDate - new Date(today.getFullYear(), today.getMonth(), today.getDate())) / 86400000);
+      const dateLabel = event.overdue
+        ? `Achterstallig · gepland op ${event.dueDate}`
+        : daysUntil === 0 ? "Vandaag"
+          : daysUntil === 1 ? "Morgen"
+            : eventDate.toLocaleDateString("nl-NL", { weekday: "long", day: "numeric", month: "long" });
+      return `<li><button class="notification-item" type="button" data-notification-date="${event.date}" aria-label="Bekijk ${window.SproutlyPlants.escape(event.title)} voor ${window.SproutlyPlants.escape(event.plantName)} op ${dateLabel}">
+        <span><strong>${window.SproutlyPlants.escape(event.plantName)}</strong><small>${window.SproutlyPlants.escape(event.title)}</small></span>
+        <span class="notification-date">${window.SproutlyPlants.escape(dateLabel)}</span>
+      </button></li>`;
+    }).join("");
+
+    notificationList.querySelectorAll("[data-notification-date]").forEach((button) => {
+      button.addEventListener("click", () => {
+        selectedDate = window.SproutlyCare.parseDate(button.dataset.notificationDate);
+        visibleMonth = new Date(selectedDate.getFullYear(), selectedDate.getMonth(), 1);
+        renderCalendar();
+        document.querySelector("#calendar-title").scrollIntoView({ behavior: "smooth", block: "start" });
+        calendarGrid.querySelector(`[data-day="${selectedDate.getDate()}"]`)?.focus();
+      });
+    });
+  }
+
   function renderCalendar() {
     const year = visibleMonth.getFullYear();
     const month = visibleMonth.getMonth();
     const events = getCareEvents();
+    renderNotifications(events);
     const monthEvents = events.filter((event) => {
       const date = window.SproutlyCare.parseDate(event.date);
       return date.getFullYear() === year && date.getMonth() === month;

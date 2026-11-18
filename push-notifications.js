@@ -1,4 +1,39 @@
 (() => {
+  const settingsDialog = document.querySelector("#notification-settings");
+  if (settingsDialog) {
+    let dialogOpener = null;
+    const openSettingsFromHash = () => {
+      if (window.location.hash === "#notification-settings" && !settingsDialog.open) {
+        dialogOpener = document.activeElement;
+        settingsDialog.showModal();
+      } else if (window.location.hash !== "#notification-settings" && settingsDialog.open) {
+        settingsDialog.close();
+      }
+    };
+    const iconCloseButton = document.querySelector(".notification-dialog-close");
+    const closeButton = document.querySelector("#notification-settings-close");
+    const centerLink = document.querySelector("#notification-center-open");
+    iconCloseButton?.addEventListener("click", () => settingsDialog.close());
+    closeButton?.addEventListener("click", () => settingsDialog.close());
+    centerLink?.addEventListener("click", () => settingsDialog.close());
+    settingsDialog.addEventListener("keydown", (event) => {
+      if (event.key === "Escape") {
+        event.preventDefault();
+        settingsDialog.close();
+      }
+    });
+    settingsDialog.addEventListener("close", () => {
+      if (window.location.hash === "#notification-settings") {
+        const url = new URL(window.location.href);
+        url.hash = "";
+        window.history.replaceState(window.history.state, "", url);
+      }
+      if (dialogOpener?.isConnected) dialogOpener.focus();
+    });
+    window.addEventListener("hashchange", openSettingsFromHash);
+    openSettingsFromHash();
+  }
+
   const enableButton = document.querySelector("#push-reminder-button");
   const disableButton = document.querySelector("#push-reminder-disable");
   const timeInput = document.querySelector("#push-reminder-time");

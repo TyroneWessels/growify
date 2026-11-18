@@ -15,10 +15,21 @@
   <link rel="stylesheet" href="herstel.css" />
 </head>
 <body>
+  <a class="skip-link" href="herstel/#recovery-main">Ga naar hoofdinhoud</a>
   <header class="recovery-header">
     <a class="brand" href="./" aria-label="Growify startpagina"><span class="brand-mark" aria-hidden="true">✦</span><span>growify</span></a>
   </header>
-  <main class="recovery-page">
+  <div class="accessibility-tools recovery-accessibility-tools">
+    <button class="accessibility-toggle" type="button" aria-label="Grotere tekst instellen" aria-pressed="false">
+      <span aria-hidden="true">A+</span>
+      <span class="accessibility-toggle-label">Grotere tekst</span>
+    </button>
+    <button class="contrast-toggle" type="button" aria-label="Hoog contrast instellen" aria-pressed="false">
+      <span aria-hidden="true">HC</span>
+      <span class="accessibility-toggle-label">Hoog contrast</span>
+    </button>
+  </div>
+  <main class="recovery-page" id="recovery-main" tabindex="-1">
     <section class="recovery-card auth-content" aria-labelledby="recovery-title">
       <p class="eyebrow">Jouw groene account</p>
       <h1 id="recovery-title">Wachtwoord <em>herstellen.</em></h1>
@@ -40,5 +51,6 @@
   <script src="account.js"></script>
   <script src="herstel.js"></script>
   <script src="pwa.js"></script>
+  <script src="toegankelijkheid.js"></script>
 </body>
 </html>
