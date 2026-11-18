@@ -310,7 +310,7 @@ h2 span { color: #cf7d5f; }
 .image-credit { display: inline-block; color: var(--muted); font-size: 10px; text-decoration: underline; text-underline-offset: 2px; }
 .image-credit:hover { color: var(--green); }
 .catalog-account-link { font-size: 12px; font-weight: 700; color: var(--green); }
-.my-plants-section { display: grid; grid-template-columns: .9fr 1.1fr; gap: 90px; align-items: center; margin: 112px -42px 0; padding: 75px 11%; background: #e9f0e2; }
+.my-plants-section { display: grid; grid-template-columns: .9fr 1.1fr; gap: 90px; align-items: start; margin: 112px -42px 0; padding: 75px 11%; background: #e9f0e2; }
 .my-plants-copy h2 { margin-bottom: 18px; font-size: 46px; }
 .my-plants-copy > p:not(.eyebrow) { max-width: 270px; margin: 0 0 25px; color: var(--muted); font-size: 13px; line-height: 1.6; }
 .primary-button { padding: 12px 17px; font-size: 12px; }
@@ -333,8 +333,9 @@ h2 span { color: #cf7d5f; }
 .collection-empty p { margin: 0 0 12px; }
 .care-plan-section { padding: 82px 0 0; }
 .date-badge { padding: 8px 12px; border-radius: 16px; background: var(--light-green); color: var(--green); font-size: 10px; text-transform: capitalize; }
-.care-plan-grid { display: grid; grid-template-columns: 1.05fr .95fr; gap: 15px; }
+.care-plan-grid { display: grid; grid-template-columns: 1.05fr .95fr; align-items: start; gap: 15px; }
 .today-card, .week-card { min-height: 180px; padding: 22px; border-radius: 9px; background: var(--paper); }
+#today-tasks { max-height: min(60vh, 32rem); overflow-y: auto; overscroll-behavior: contain; }
 .today-card-header, .week-card-header { display: flex; justify-content: space-between; align-items: center; margin-bottom: 15px; font-size: 13px; }
 .today-card-header span, .week-card-header span { color: var(--muted); font-size: 10px; }
 .care-task { display: flex; align-items: center; width: 100%; gap: 11px; padding: 9px 0; border: 0; border-top: 1px solid var(--line); background: transparent; color: var(--ink); text-align: left; }

@@ -26,6 +26,13 @@ test("all pages provide a keyboard skip link to a focusable main area", () => {
   }
 });
 
+test("today's care list scrolls independently and collection intro aligns to the top", () => {
+  const styles = fs.readFileSync(path.join(root, "styles.css"), "utf8");
+  assert.match(styles, /\.care-plan-grid\s*\{[^}]*align-items:\s*start;/);
+  assert.match(styles, /#today-tasks\s*\{[^}]*max-height:[^}]*overflow-y:\s*auto;/);
+  assert.match(styles, /\.my-plants-section\s*\{[^}]*align-items:\s*start;/);
+});
+
 test("the header separates notification settings from the notification center", () => {
   for (const page of ["index", "planten", "mijn-planten", "kalender", "plant"]) {
     const html = fs.readFileSync(path.join(root, `${page}.html`), "utf8");
